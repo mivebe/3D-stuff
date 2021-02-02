@@ -5,6 +5,7 @@ import { DRACOLoader } from "./node_modules/three/examples/jsm/loaders/DRACOLoad
 import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js';
 import { MD2CharacterComplex } from './node_modules/three/examples/jsm/misc/MD2CharacterComplex.js';
 import { Gyroscope } from './node_modules/three/examples/jsm/misc/Gyroscope.js';
+import { Loader } from "./node_modules/three/src/loaders/Loader.js"
 
 let SCREEN_WIDTH = window.innerWidth;
 let SCREEN_HEIGHT = window.innerHeight;
@@ -21,15 +22,19 @@ let cameraControls;
 
 const allActions = [];
 const baseActions = {
-    idle_strip: { weight: 1 },
-    walk_strip: { weight: 0 },
-    run: { weight: 0 }
+    idle: { weight: 1 },
+    walk: { weight: 0 },
+    run: { weight: 0 },
+    backpaddle: { weight: 0 },
 };
 const additiveActions = {
     sneak_pose: { weight: 0 },
     sad_pose: { weight: 0 },
     agree: { weight: 0 },
-    headShake: { weight: 0 }
+    headShake: { weight: 0 },
+    // t_add: { weight: 0 },
+    // jump_add: { weight: 0 },
+    // crouch_add: { weight: 0 },
 };
 
 const controls = {
@@ -37,7 +42,7 @@ const controls = {
     moveForward: false,
     moveBackward: false,
     moveLeft: false,
-    moveRight: false
+    moveRight: false,
 
 };
 
@@ -55,8 +60,8 @@ function init() {
 
     // CAMERA
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 4000);
-    camera.position.set(0, 150, 1300);
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+    camera.position.set(0, 150, 500);
 
     // SCENE
 
@@ -87,18 +92,18 @@ function init() {
     light.shadow.camera.bottom = - 350;
 
     scene.add(light);
-    scene.add(new THREE.CameraHelper(light.shadow.camera));
+    // scene.add(new THREE.CameraHelper(light.shadow.camera));
 
 
     //  GROUND
 
     const gt = new THREE.TextureLoader().load("./textures/grasslight-big.jpg");
-    const gg = new THREE.PlaneBufferGeometry(16000, 16000);
+    const gg = new THREE.PlaneBufferGeometry(5000, 5000);
     const gm = new THREE.MeshPhongMaterial({ color: 0xffffff, map: gt });
 
     const ground = new THREE.Mesh(gg, gm);
     ground.rotation.x = - Math.PI / 2;
-    ground.material.map.repeat.set(64, 64);
+    ground.material.map.repeat.set(5, 5);
     ground.material.map.wrapS = THREE.RepeatWrapping;
     ground.material.map.wrapT = THREE.RepeatWrapping;
     ground.material.map.encoding = THREE.sRGBEncoding;
@@ -134,7 +139,7 @@ function init() {
     // CONTROLS
 
     cameraControls = new OrbitControls(camera, renderer.domElement);
-    cameraControls.target.set(0, 50, 0);
+    cameraControls.target.set(0, 0, 0);
     cameraControls.enableKeys = false;
     cameraControls.update();
 
@@ -168,16 +173,12 @@ function init() {
     loader.load("./models/warrior.glb", function (gltf) {
         model = gltf.scene
         scene.add(model);
-        model.scale.set(100, 100, 100);
+        model.scale.set(30, 30, 30);
         console.log(gltf);
 
         model.traverse(function (object) {
             if (object.isMesh) object.castShadow = true
         });
-
-        // skeleton = new THREE.SkeletonHelper(model);
-        // skeleton.visible = true;
-        // scene.add(skeleton);
 
         const animations = gltf.animations;
         mixer = new THREE.AnimationMixer(model);
@@ -188,7 +189,7 @@ function init() {
 
             let clip = animations[i];
             const name = clip.name;
-            console.log(clip);
+
 
             if (baseActions[name]) {
                 const action = mixer.clipAction(clip);
@@ -198,7 +199,7 @@ function init() {
             } else if (additiveActions[name]) {
                 THREE.AnimationUtils.makeClipAdditive(clip);
 
-                if (clip.name.endsWith("_pose")) {
+                if (clip.name.endsWith("_add")) {
                     clip = THREE.AnimationUtils.subclip(clip, clip.name, 2, 3, 30);
                 }
                 const actions = mixer.clipAction(clip);
@@ -218,85 +219,7 @@ function init() {
             console.log(`GLTFLoader has Flatlined : ${error}`);
         }
     )
-    // const configOgro = {
 
-    //     baseUrl: "./models/",
-
-    //     body: "ogro.md2",
-    //     skins: ["grok.jpg", "ogrobase.png", "arboshak.png", "ctf_r.png", "ctf_b.png", "darkam.png", "freedom.png",
-    //         "gib.png", "gordogh.png", "igdosh.png", "khorne.png", "nabogro.png",
-    //         "sharokh.png"],
-    //     weapons: [["weapon.md2", "weapon.jpg"]],
-    //     animations: {
-    //         move: "run",
-    //         idle: "stand",
-    //         jump: "jump",
-    //         attack: "attack",
-    //         crouchMove: "cwalk",
-    //         crouchIdle: "cstand",
-    //         crouchAttach: "crattack"
-    //     },
-
-    //     walkSpeed: 350,
-    //     crouchSpeed: 175
-
-    // };
-
-    // const nRows = 1;
-    // const nSkins = configOgro.skins.length;
-
-    // nCharacters = nSkins * nRows;
-
-    // for (let i = 0; i < nCharacters; i++) {
-
-    //     const character = new MD2CharacterComplex();
-    //     character.scale = 3;
-    //     character.controls = controls;
-    //     characters.push(character);
-
-    // }
-
-    // const baseCharacter = new MD2CharacterComplex();
-    // baseCharacter.scale = 3;
-
-    // baseCharacter.onLoadComplete = function () {
-
-    //     let k = 0;
-
-    //     for (let j = 0; j < nRows; j++) {
-
-    //         for (let i = 0; i < nSkins; i++) {
-
-    //             const cloneCharacter = characters[k];
-
-    //             cloneCharacter.shareParts(baseCharacter);
-
-    //             // cast and receive shadows
-    //             cloneCharacter.enableShadows(true);
-
-    //             cloneCharacter.setWeapon(0);
-    //             cloneCharacter.setSkin(i);
-
-    //             cloneCharacter.root.position.x = (i - nSkins / 2) * 150;
-    //             cloneCharacter.root.position.z = j * 250;
-
-    //             scene.add(cloneCharacter.root);
-
-    //             k++;
-
-    //         }
-
-    //     }
-
-    //     const gyro = new Gyroscope();
-    //     gyro.add(camera);
-    //     gyro.add(light, light.target);
-
-    //     characters[Math.floor(nSkins / 2)].root.add(gyro);
-
-    // };
-
-    // baseCharacter.loadParts(configOgro);
 }
 
 function setWeight(action, weight) {
