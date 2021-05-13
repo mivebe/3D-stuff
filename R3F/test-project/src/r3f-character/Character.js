@@ -21,8 +21,8 @@ const Character = () => {
 
 
     return (
-        <Canvas className='canvas' >
-            {/* <OrbitControls /> */}
+        <Canvas className='canvas'>
+            <OrbitControls />
             <directionalLight intensity={0.5} />
             <ambientLight intensity={0.2} />
             {/* <Camera position={[5, 5, 20]} rotation={[0, 0, 0]} near={1} far={1000} /> */}

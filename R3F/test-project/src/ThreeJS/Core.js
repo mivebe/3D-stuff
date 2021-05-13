@@ -1,10 +1,11 @@
-import React from 'react'
 import * as THREE from "three"
 // import { Expo, TimelineMax, TweenLite } from "gsap"
 
 const Core = () => {
     const width = window.innerWidth;
+    console.log(width);
     const height = window.innerHeight;
+    console.log(height);
     const ratio = width / height;
     const fov = 75;
     const nearPlane = 0.1;
@@ -70,11 +71,6 @@ const Core = () => {
     render();
 
     window.addEventListener("mousemove", onMouseMove)
-    return (
-        <div>
-
-        </div>
-    )
 }
 
 export default Core
