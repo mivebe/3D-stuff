@@ -1,20 +1,137 @@
-*
-{
+*{
     margin: 0;
     padding: 0;
 }
 
 html,
-body
-{
+body{
     height: 100vh;
     font-family: 'Poppins';
+    background:gray;
+    display: flex;
+    flex-direction: column;
 }
 
-.webgl
-{
-    position: fixed;
+.webgl{
+    /* position: fixed;
     top: 0;
-    left: 0;
+    right: 0; */
     outline: none;
 }
+
+h1{
+    height: auto;
+    background-color: hotpink;
+}
+.text-container{
+    width: 50%;
+    text-align: left;
+    padding: 20px 40px;
+}
+.phone-container{
+    display: flex;
+    flex-wrap: wrap;
+    width: 50%;
+    background-color: blue;
+}
+.full-container{
+    width: 100vw;
+    background-color: green;
+    display: flex;
+    flex-direction: row;
+}
+.secound-container{
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+}
+.svg-container--1{
+    width: 50%;
+    padding: 40px;
+}
+.svg-container--2{
+    display: flex;
+    width: 50%;
+    padding: 10px;
+
+}
+
+/* svg button */
+
+:root {
+    --dark-color: #635bff;
+    --light-color: #80e9ff;
+  }
+
+  svg {
+    cursor: pointer;
+  }
+
+  #darkGroup {
+    fill: var(--dark-color);
+  }
+  #lightGroup {
+    fill: var(--light-color);
+  }
+  #dark1,
+  #light1,
+  #dark2 {
+    transition: all 1s ease;
+  }
+  #dark2 {
+    transform: translateX(-100%);
+  }
+  svg:hover #light1 {
+    transform: translateX(20%);
+  }
+  svg:hover #dark1 {
+    transform: translateX(40%);
+    opacity: 0;
+  }
+  svg:hover #dark2 {
+    transform: translateX(0%);
+  }
+
+/* svg  picture */
+
+.svg-container--2 svg{
+    width: 80%;
+}
+
+  #skeleton {
+    animation: fadeInUp 1s;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  #bolt g {
+    opacity: 0;
+    animation: dropIn 8s;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+    animation-delay: calc(var(--order) * 200ms);
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes dropIn {
+    20% {
+      opacity: 0;
+      transform: translateY(-20%);
+    }
+
+    30%, 100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+  }
