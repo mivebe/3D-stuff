@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export class Lights extends THREE.Group {
+export default class Lights extends THREE.Group {
   constructor() {
     super();
 
