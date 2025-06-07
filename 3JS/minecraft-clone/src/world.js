@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { DEF_WORLD_SIZE, DEF_HEIGHT } from './config';
 
-export class World extends THREE.Group {
+export default class World extends THREE.Group {
   /** 
-   @description Represents a 3D world made up of blocks.
+    Represents a 3D world made up of blocks.
     @param {number} [size=DEF_WORLD_SIZE] - The number of blocks per side of the world.
     @param {number} [height=DEF_HEIGHT] - The height of the world in blocks.
     @param {THREE.Object3D} [container] - Optional container to add the world to.
