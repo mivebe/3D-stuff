@@ -3,6 +3,7 @@ import { DEF_WORLD_SIZE, DEF_HEIGHT } from './config';
 import { SimplexNoise } from 'three/examples/jsm/math/SimplexNoise.js';
 import { clamp } from 'three/src/math/MathUtils.js';
 import { RNG } from '../rng';
+import { blocks, blocksList } from './blocks';
 
 export default class World extends THREE.Group {
   /** 
@@ -42,7 +43,7 @@ export default class World extends THREE.Group {
       for (let y = 0; y < this.height; y++) {
         const row = [];
         for (let z = 0; z < this.size; z++) {
-          row.push({ id: 0, instanceId: null });
+          row.push({ id: blocks.empty.id, instanceId: null });
         }
         slice.push(row);
       }
@@ -63,8 +64,14 @@ export default class World extends THREE.Group {
         const height = Math.floor(this.height * scaledNoise);
         const clampedHeight = clamp(height, 1, this.height - 1);
 
-        for (let y = 0; y < clampedHeight; y++) {
-          this.setBlockId({ x, y, z }, 1); // Set block id to 1 for solid blocks
+        for (let y = 0; y < this.height; y++) {
+          if (y < clampedHeight) {
+            this.setBlockId({ x, y, z }, blocks.dirt.id);
+          } else if (y === clampedHeight) {
+            this.setBlockId({ x, y, z }, blocks.grass.id);
+          } else {
+            this.setBlockId({ x, y, z }, blocks.empty.id);
+          }
         }
       }
     }
@@ -73,7 +80,7 @@ export default class World extends THREE.Group {
   generateMeshes() {
     const maxCount = this.size * this.size * this.height;
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+    const material = new THREE.MeshLambertMaterial();
     const matrix = new THREE.Matrix4();
     const instancedMesh = new THREE.InstancedMesh(geometry, material, maxCount);
     instancedMesh.count = 0;
@@ -84,9 +91,10 @@ export default class World extends THREE.Group {
           const blockId = this.getBlock({ x, y, z }).id || 0;
           const instanceId = instancedMesh.count;
 
-          if (blockId) {
+          if (blockId && !this.isBlockObscured({ x, y, z })) {
             matrix.setPosition(x + 0.5, y + 0.5, z + 0.5);
             instancedMesh.setMatrixAt(instanceId, matrix);
+            instancedMesh.setColorAt(instanceId, new THREE.Color(blocksList[blockId].color));
             instancedMesh.count++;
             this.setBlockInstanceId({ x, y, z }, instanceId);
           }
@@ -153,5 +161,26 @@ export default class World extends THREE.Group {
     } else {
       return false;
     }
+  }
+
+  isBlockObscured({ x, y, z }) {
+    const directions = [
+      { x: -1, y: 0, z: 0 }, // left
+      { x: 1, y: 0, z: 0 }, // right
+      { x: 0, y: 0, z: -1 }, // backward
+      { x: 0, y: 0, z: 1 }, // forward
+      { x: 0, y: 1, z: 0 }, // up
+      { x: 0, y: -1, z: 0 }, // down
+    ];
+
+    for (const dir of directions) {
+      const nx = x + dir.x;
+      const ny = y + dir.y;
+      const nz = z + dir.z;
+      if (!this.inBounds({ x: nx, y: ny, z: nz })) return false;
+      const neighbor = this.getBlock({ x: nx, y: ny, z: nz });
+      if (!neighbor || neighbor.id === blocks.empty.id) return false;
+    }
+    return true;
   }
 }
