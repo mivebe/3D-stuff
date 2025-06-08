@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { DEF_WORLD_SIZE, DEF_HEIGHT } from './config';
 import { SimplexNoise } from 'three/examples/jsm/math/SimplexNoise.js';
 import { clamp } from 'three/src/math/MathUtils.js';
+import { RNG } from '../rng';
 
 export default class World extends THREE.Group {
   /** 
@@ -17,6 +18,7 @@ export default class World extends THREE.Group {
     this.height = height; // Height of the world in blocks
     this.data = []; // 3D array to hold block data
     this.params = {
+      seed: 0,
       terrain: {
         scale: 30,
         magnitude: 0.5,
@@ -50,7 +52,8 @@ export default class World extends THREE.Group {
 
   applyNoise() {
     const { scale, magnitude, offset } = this.params.terrain;
-    const simplex = new SimplexNoise();
+    const rng = new RNG(this.params.seed);
+    const simplex = new SimplexNoise(rng);
 
     for (let x = 0; x < this.size; x++) {
       for (let z = 0; z < this.size; z++) {
