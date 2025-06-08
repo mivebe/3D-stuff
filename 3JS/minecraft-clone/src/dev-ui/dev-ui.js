@@ -27,12 +27,28 @@ export default class DevUI extends GUI {
   }
 
   createWorldUI(world) {
-    this.add(world, 'size', 16, 128, 1)
+    const worldFolder = this.addFolder('World');
+    worldFolder
+      .add(world, 'size', 16, 128, 1)
       .name('World Size')
       .onChange(() => this.debounceUpdate('worldDeboundce', world, 'Regenerating world...'));
-    this.add(world, 'height', 16, 64, 1)
+    worldFolder
+      .add(world, 'height', 16, 64, 1)
       .name('World Height')
       .onChange(() => this.debounceUpdate('worldDeboundce', world, 'Regenerating world...'));
+    const noiseFolder = this.addFolder('Noise');
+    noiseFolder
+      .add(world.params.terrain, 'scale', 10, 100)
+      .name('Scale')
+      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 100));
+    noiseFolder
+      .add(world.params.terrain, 'magnitude', 0, 1)
+      .name('Magnitude')
+      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 100));
+    noiseFolder
+      .add(world.params.terrain, 'offset', 0, 1)
+      .name('Offset')
+      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 100));
   }
 
   createCameradUI(camera) {
@@ -43,7 +59,7 @@ export default class DevUI extends GUI {
     console.log(renderer);
   }
 
-  debounceUpdate(timeoutName, object, message) {
+  debounceUpdate(timeoutName, object, message, delay = 500) {
     if (this[timeoutName]) clearTimeout(this[timeoutName]);
 
     this[timeoutName] = setTimeout(() => {
@@ -52,6 +68,6 @@ export default class DevUI extends GUI {
       object.regenerate?.();
       clearTimeout(this[timeoutName]);
       this[timeoutName] = null;
-    }, 500);
+    }, delay);
   }
 }
