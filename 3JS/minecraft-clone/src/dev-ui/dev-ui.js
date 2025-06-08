@@ -40,15 +40,15 @@ export default class DevUI extends GUI {
     noiseFolder
       .add(world.params.terrain, 'scale', 10, 100)
       .name('Scale')
-      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 100));
+      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
     noiseFolder
       .add(world.params.terrain, 'magnitude', 0, 1)
       .name('Magnitude')
-      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 100));
+      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
     noiseFolder
       .add(world.params.terrain, 'offset', 0, 1)
       .name('Offset')
-      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 100));
+      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
   }
 
   createCameradUI(camera) {
