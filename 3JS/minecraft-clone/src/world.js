@@ -32,8 +32,11 @@ export default class World extends THREE.Group {
   }
 
   init() {
+    const rng = new RNG(this.params.seed);
+
     this.initializeTerrainData();
-    this.applyNoise();
+    this.generateResources(rng);
+    // this.generateTerrain(rng);
     this.generateMeshes();
   }
 
@@ -51,9 +54,28 @@ export default class World extends THREE.Group {
     }
   }
 
-  applyNoise() {
+  generateResources(rng) {
+    const simplex = new SimplexNoise(rng);
+    for (let x = 0; x < this.size; x++) {
+      for (let y = 0; y < this.height; y++) {
+        for (let z = 0; z < this.size; z++) {
+          const { id, resource } = blocks.stone;
+          const {
+            clusterSize: { cx, cy, cz },
+            abundance,
+          } = resource;
+          const noiseValue = simplex.noise3d(x / cx, y / cy, z / cz);
+
+          if (noiseValue > 1 - abundance) {
+            this.setBlockId({ x, y, z }, id);
+          }
+        }
+      }
+    }
+  }
+
+  generateTerrain(rng) {
     const { scale, magnitude, offset } = this.params.terrain;
-    const rng = new RNG(this.params.seed);
     const simplex = new SimplexNoise(rng);
 
     for (let x = 0; x < this.size; x++) {
