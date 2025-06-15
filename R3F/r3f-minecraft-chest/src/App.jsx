@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Loader } from '@react-three/drei';
-import Lights from './components/Three/lights';
-import Floor from './components/Three/floor';
-import Model from './components/Three/chest';
-import UserControls from './components/Three/controls';
+import Lights from './components/scene/Lights';
+import Floor from './components/scene/Floor';
+import Model from './components/scene/Chest';
+import UserControls from './components/scene/Controls';
 
 import './styles/App.css';
 
