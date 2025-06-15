@@ -1,47 +1,47 @@
 {
-  "name": "minecraft-r3f",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@react-three/drei": "^2.2.7",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "immer": "^8.0.0",
-    "react": "^16.13.1",
-    "react-dnd": "^11.1.3",
-    "react-dnd-html5-backend": "^11.1.3",
-    "react-dom": "^17.0.1",
-    "react-scripts": "3.4.1",
-    "react-spring": "^8.0.27",
-    "react-three-fiber": "^5.3.1",
-    "sass": "^1.29.0",
-    "three": "^0.122.0",
-    "use-immer": "^0.4.2",
-    "web-vitals": "^0.2.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+	"name": "react-three-minecraft-chest",
+	"version": "0.1.0",
+	"private": false,
+	"dependencies": {
+		"@react-spring/web": "10.0.1",
+		"@react-three/drei": "10.2.0",
+		"@react-three/fiber": "9.0.0",
+		"three": "0.177.0",
+		"three-stdlib": "2.36.0",
+		"immer": "10.1.1",
+		"use-immer": "0.11.0",
+		"react": "19.0.0",
+		"react-dom": "19.0.0",
+		"react-dnd": "16.0.1",
+		"react-dnd-html5-backend": "16.0.1",
+		"react-scripts": "5.0.1",
+		"sass": "1.77.5"
+	},
+	"devDependencies": {
+		"@types/react": "19.1.8",
+		"@types/react-dom": "19.1.6"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"eject": "react-scripts eject"
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
 }
