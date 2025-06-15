@@ -1,165 +1,166 @@
 /* @font-face for the minecraft text */
 @font-face {
-  font-family: "Minecraft Regular";
-  src: url("../assets/fonts/1_Minecraft-Regular.eot?") format("eot"), url("../assets/fonts/1_Minecraft-Regular.woff") format("woff"), url("../assets/fonts/1_Minecraft-Regular.ttf") format("truetype"), url("../assets/fonts/1_Minecraft-Regular.svg#Minecraft-Regular") format("svg");
-  font-weight: normal;
-  font-style: normal;
+	font-family: 'Minecraft Regular';
+	src: url('../assets/fonts/1_Minecraft-Regular.eot?') format('eot'),
+		url('../assets/fonts/1_Minecraft-Regular.woff') format('woff'),
+		url('../assets/fonts/1_Minecraft-Regular.ttf') format('truetype'),
+		url('../assets/fonts/1_Minecraft-Regular.svg#Minecraft-Regular') format('svg');
+	font-weight: normal;
+	font-style: normal;
 }
 
 * {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 html,
 body,
 #root {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 img {
-  -webkit-user-drag: none;
-  -khtml-user-drag: none;
-  -moz-user-drag: none;
-  -o-user-drag: none;
-  user-drag: none;
+	-webkit-user-drag: none;
+	-khtml-user-drag: none;
+	-moz-user-drag: none;
+	-o-user-drag: none;
 }
 
 body {
-  background: -webkit-gradient(linear, left top, left bottom, from(#bccae4), to(#9b9ca2));
-  background: linear-gradient(#bccae4, #9b9ca2);
-  overflow: hidden;
-  margin: 0;
+	background: -webkit-gradient(linear, left top, left bottom, from(#bccae4), to(#9b9ca2));
+	background: linear-gradient(#bccae4, #9b9ca2);
+	overflow: hidden;
+	margin: 0;
 }
 
 .modal-chest-wrapper {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 10;
 }
 
 .modal-chest-wrapper .overlay {
-  background: rgba(0, 0, 0, 0.6);
-  height: 100%;
-  width: 100%;
-  position: absolute;
+	background: rgba(0, 0, 0, 0.6);
+	height: 100%;
+	width: 100%;
+	position: absolute;
 }
 
 .modal-chest-wrapper .modal-chest {
-  z-index: 99;
-  border: 4px solid #000;
-  background: #ceccce;
-  color: #575557;
-  width: 768px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
-  border-radius: 12px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+	z-index: 99;
+	border: 4px solid #000;
+	background: #ceccce;
+	color: #575557;
+	width: 768px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	border-radius: 12px;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .modal-chest-wrapper .modal-chest::before {
-  z-index: -9;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  position: absolute;
-  content: "";
-  border-top: 8px solid #fefdfe;
-  border-left: 8px solid #fefdfe;
-  border-right: 8px solid #414041;
-  border-bottom: 8px solid #414041;
+	z-index: -9;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	position: absolute;
+	content: '';
+	border-top: 8px solid #fefdfe;
+	border-left: 8px solid #fefdfe;
+	border-right: 8px solid #414041;
+	border-bottom: 8px solid #414041;
 }
 
 .modal-chest-wrapper .modal-chest .top {
-  padding: 20px 20px 10px 20px;
+	padding: 20px 20px 10px 20px;
 }
 
 .modal-chest-wrapper .modal-chest .middle {
-  padding: 0px 20px 10px 20px;
+	padding: 0px 20px 10px 20px;
 }
 
 .modal-chest-wrapper .modal-chest .bottom {
-  padding: 10px 20px 20px 20px;
+	padding: 10px 20px 20px 20px;
 }
 
 .modal-chest-wrapper .modal-chest .header {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  height: 48px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	height: 48px;
 }
 
 .modal-chest-wrapper .modal-chest .header .close {
-  font-family: "Minecraft Regular";
-  font-size: 40px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  height: 48px;
-  width: 48px;
-  padding: 8px;
-  margin-right: 8px;
-  margin-bottom: 16px;
-  cursor: pointer;
+	font-family: 'Minecraft Regular';
+	font-size: 40px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	height: 48px;
+	width: 48px;
+	padding: 8px;
+	margin-right: 8px;
+	margin-bottom: 16px;
+	cursor: pointer;
 }
 
 .modal-chest-wrapper .modal-chest .header h4 {
-  margin: 0;
-  font-size: 40px;
-  font-family: "Minecraft Regular";
-  font-weight: 500;
+	margin: 0;
+	font-size: 40px;
+	font-family: 'Minecraft Regular';
+	font-weight: 500;
 }
 
 .grid {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  position: relative;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	position: relative;
 }
 
 .grid .grid-item {
-  height: 80px;
-  width: 80px;
-  min-height: 80px;
-  min-width: 80px;
-  background: #969597;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  border-right: 4px solid #fefdfe;
-  border-bottom: 4px solid #fefdfe;
-  border-left: 4px solid #414041;
-  border-top: 4px solid #414041;
+	height: 80px;
+	width: 80px;
+	min-height: 80px;
+	min-width: 80px;
+	background: #969597;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	border-right: 4px solid #fefdfe;
+	border-bottom: 4px solid #fefdfe;
+	border-left: 4px solid #414041;
+	border-top: 4px solid #414041;
 }
 
 .grid .grid-item.is-over {
-  background: lightgreen;
+	background: lightgreen;
 }
-/*# sourceMappingURL=App.css.map */
