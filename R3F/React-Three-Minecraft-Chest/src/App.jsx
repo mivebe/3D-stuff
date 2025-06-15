@@ -6,7 +6,7 @@ import Floor from './components/Three/floor';
 import Model from './components/Three/chest';
 import UserControls from './components/Three/controls';
 
-import './assets/styles/App.scss';
+import './styles/App.scss';
 
 const App = () => {
 	const [isOpen, setIsOpen] = useState(false);
