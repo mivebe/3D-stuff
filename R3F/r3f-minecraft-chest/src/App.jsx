@@ -12,7 +12,7 @@ const App = () => {
 	return (
 		<>
 			<Canvas shadows camera={{ position: [-5, 4, 4], fov: 40 }}>
-				<Suspense fallback={Loader}>
+				<Suspense fallback={() => <Loader />}>
 					<Model />
 				</Suspense>
 				<Lights />
