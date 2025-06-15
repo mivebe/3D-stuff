@@ -18,17 +18,17 @@ A 3D Minecraft-style chest built with [React Three Fiber](https://docs.pmnd.rs/r
 
 2. **Install dependencies:**
   ```bash
-  npm install
+  yarn
   ```
 
 3. **Run the development server:**
   ```bash
-  npm start
+  yarn dev
   ```
 
 4. **Open in your browser:**
   ```
-  http://localhost:3000
+  http://localhost:5173
   ```
 ```
 
@@ -37,4 +37,4 @@ A 3D Minecraft-style chest built with [React Three Fiber](https://docs.pmnd.rs/r
 MIT
 
 ---
-Built with ❤️ using React Three Fiber.
+Built using React Three Fiber.

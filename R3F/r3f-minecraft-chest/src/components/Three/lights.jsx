@@ -2,12 +2,14 @@ import { useHelper } from '@react-three/drei';
 import { useRef } from 'react';
 import { DirectionalLightHelper, PointLightHelper } from 'three';
 
-const Lights = () => {
+const Lights = ({ showHelpers = false }) => {
 	const dirLightRef = useRef();
 	const pointLightRef = useRef();
 
-	useHelper(dirLightRef, DirectionalLightHelper, 5, 'hotpink');
-	useHelper(pointLightRef, PointLightHelper, 5, 'green');
+	if (showHelpers) {
+		useHelper(dirLightRef, DirectionalLightHelper, 5, 'hotpink');
+		useHelper(pointLightRef, PointLightHelper, 5, 'green');
+	}
 
 	return (
 		<>
