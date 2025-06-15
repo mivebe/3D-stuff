@@ -3,19 +3,16 @@
 	"version": "0.1.0",
 	"private": false,
 	"dependencies": {
-		"@react-spring/web": "10.0.1",
+		"@react-spring/three": "10.0.1",
 		"@react-three/drei": "10.2.0",
 		"@react-three/fiber": "9.0.0",
 		"three": "0.177.0",
 		"three-stdlib": "2.36.0",
-		"immer": "10.1.1",
-		"use-immer": "0.11.0",
 		"react": "19.0.0",
 		"react-dom": "19.0.0",
 		"react-dnd": "16.0.1",
 		"react-dnd-html5-backend": "16.0.1",
-		"react-scripts": "5.0.1",
-		"sass": "1.77.5"
+		"react-scripts": "5.0.1"
 	},
 	"devDependencies": {
 		"@types/react": "19.1.8",
