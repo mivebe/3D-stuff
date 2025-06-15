@@ -11,7 +11,7 @@ const Lights = () => {
 
 	return (
 		<>
-			{/* <fog attach="fog" args={["#fff", 0, 22]} /> */}
+			<fogExp2 attach="fog" args={['lightgray', 0.03]} />
 			<ambientLight intensity={0.4} />
 			<directionalLight
 				ref={dirLightRef}
@@ -22,7 +22,7 @@ const Lights = () => {
 			>
 				<orthographicCamera attach="shadow-camera" args={[-10, 10, 10, -10, 1, 50]} />
 			</directionalLight>
-			{/* <pointLight ref={pointLightRef} position={[0, 50, 0]} intensity={2} /> */}
+			<pointLight ref={pointLightRef} position={[0, 50, 0]} intensity={2} />
 		</>
 	);
 };
