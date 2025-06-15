@@ -1,4 +1,4 @@
-import { useSpring } from '@react-spring/web';
+import { useSpring } from '@react-spring/three';
 import { extend, useThree } from '@react-three/fiber';
 import { OrbitControls } from 'three/addons';
 
@@ -6,7 +6,7 @@ const UserControls = () => {
 	const Controls = extend(OrbitControls);
 	const { gl, camera } = useThree();
 
-	useSpring(() => ({
+	useSpring({
 		from: {
 			z: 30,
 		},
@@ -19,7 +19,7 @@ const UserControls = () => {
 			camera.position.y = y;
 			camera.position.z = z;
 		},
-	}));
+	});
 
 	return (
 		<Controls
