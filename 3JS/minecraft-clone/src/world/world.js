@@ -1,9 +1,16 @@
 import * as THREE from 'three';
-import { DEF_WORLD_SIZE, DEF_HEIGHT } from './config';
+import { DEF_WORLD_SIZE, DEF_HEIGHT, DEF_RESOURCE_PROBABILITY } from '../config';
 import { SimplexNoise } from 'three/examples/jsm/math/SimplexNoise.js';
 import { clamp } from 'three/src/math/MathUtils.js';
-import { RNG } from '../rng';
-import { blocks, blocksList } from './blocks';
+import { RNG } from '../../rng';
+import { blocks, blocksById, resourcesList } from '../blocks';
+import {
+  getClusterDirections,
+  getNextResourceDirection,
+  getRandomResource,
+  getVeinDirections,
+} from './utils';
+import { sixDirections } from './constants';
 
 export default class World extends THREE.Group {
   /** 
@@ -18,12 +25,13 @@ export default class World extends THREE.Group {
     this.size = size; // Blocks per side
     this.height = height; // Height of the world in blocks
     this.data = []; // 3D array to hold block data
+    this.resourceFlags = [];
     this.params = {
       seed: 0,
       terrain: {
-        scale: 30,
-        magnitude: 0.5,
-        offset: 0.2,
+        scale: 180,
+        magnitude: 0.2,
+        offset: 0.4,
       },
     };
 
@@ -35,8 +43,8 @@ export default class World extends THREE.Group {
     const rng = new RNG(this.params.seed);
 
     this.initializeTerrainData();
+    this.generateTerrain(rng);
     this.generateResources(rng);
-    // this.generateTerrain(rng);
     this.generateMeshes();
   }
 
@@ -46,31 +54,11 @@ export default class World extends THREE.Group {
       for (let y = 0; y < this.height; y++) {
         const row = [];
         for (let z = 0; z < this.size; z++) {
-          row.push({ id: blocks.empty.id, instanceId: null });
+          row.push({ id: blocks.air.id, instanceId: null });
         }
         slice.push(row);
       }
       this.data.push(slice);
-    }
-  }
-
-  generateResources(rng) {
-    const simplex = new SimplexNoise(rng);
-    for (let x = 0; x < this.size; x++) {
-      for (let y = 0; y < this.height; y++) {
-        for (let z = 0; z < this.size; z++) {
-          const { id, resource } = blocks.stone;
-          const {
-            clusterSize: { cx, cy, cz },
-            abundance,
-          } = resource;
-          const noiseValue = simplex.noise3d(x / cx, y / cy, z / cz);
-
-          if (noiseValue > 1 - abundance) {
-            this.setBlockId({ x, y, z }, id);
-          }
-        }
-      }
     }
   }
 
@@ -80,19 +68,98 @@ export default class World extends THREE.Group {
 
     for (let x = 0; x < this.size; x++) {
       for (let z = 0; z < this.size; z++) {
-        const value = simplex.noise(x / scale, z / scale);
+        const n1 = simplex.noise(x / scale, z / scale);
+        const n2 = simplex.noise(x / (scale * 0.5), z / (scale * 0.7));
+        const n3 = simplex.noise(x / (scale * 0.15), z / (scale * 0.35));
+        const n4 = simplex.noise(x / (scale * 0.2), z / (scale * 0.1));
 
-        const scaledNoise = offset + magnitude * value;
+        const noise = 0.55 * n1 + 0.25 * n2 + 0.13 * n3 + 0.07 * n4;
+
+        const scaledNoise = offset + magnitude * noise;
         const height = Math.floor(this.height * scaledNoise);
         const clampedHeight = clamp(height, 1, this.height - 1);
+        const dirtOffset = 3 + Math.floor(Math.random() * 2); // 3 or 4
 
         for (let y = 0; y < this.height; y++) {
-          if (y < clampedHeight) {
+          if (y === 0) {
+            this.setBlockId({ x, y, z }, blocks.bedrock.id);
+            continue;
+          }
+
+          if (y < clampedHeight - dirtOffset) {
+            if (Math.random() < DEF_RESOURCE_PROBABILITY) {
+              this.resourceFlags.push({ x, y, z, depth: clampedHeight - dirtOffset - y });
+              this.setBlockId({ x, y, z }, blocks.resourceFlag.id);
+            } else {
+              this.setBlockId({ x, y, z }, blocks.air.id);
+            }
+          } else if (y < clampedHeight) {
             this.setBlockId({ x, y, z }, blocks.dirt.id);
           } else if (y === clampedHeight) {
             this.setBlockId({ x, y, z }, blocks.grass.id);
           } else {
-            this.setBlockId({ x, y, z }, blocks.empty.id);
+            this.setBlockId({ x, y, z }, blocks.air.id);
+          }
+        }
+      }
+    }
+  }
+
+  generateResources(rng) {
+    const simplex = new SimplexNoise(rng);
+
+    for (let i = 0; i < this.resourceFlags.length; i++) {
+      const { x, y, z, depth } = this.resourceFlags[i];
+      const possibleResources = resourcesList.filter(
+        (res) =>
+          (!res.resource.constraints.minDepth || res.resource.constraints.minDepth <= depth) &&
+          (!res.resource.constraints.minHeight || res.resource.constraints.minHeight <= y)
+      );
+
+      if (!possibleResources.length) {
+        console.log('No resources possible', y, depth);
+        this.setBlockId({ x, y, z }, blocks.stone.id);
+        continue;
+      }
+      const resourceId = getRandomResource(possibleResources);
+
+      this.setBlockId({ x, y, z }, resourceId);
+
+      if (blocksById[resourceId].resource.type === 'cluster') {
+        const directions = getClusterDirections();
+
+        directions.forEach((dir) => {
+          const isInBounds = this.inBounds({ x: x + dir.x, y: y + dir.y, z: z + dir.z });
+          const block = this.getBlock({ x: x + dir.x, y: y + dir.y, z: z + dir.z });
+          const canBePlaced =
+            block &&
+            !resourcesList.map((res) => res.id).includes(block.id) &&
+            block.id !== blocks.bedrock.id;
+          const setResource = Math.random() < blocksById[resourceId].resource.clusterDensity;
+
+          if (isInBounds && block && canBePlaced && setResource) {
+            this.setBlockId({ x: x + dir.x, y: y + dir.y, z: z + dir.z }, resourceId);
+          }
+        });
+      } else if (blocksById[resourceId].resource.type === 'vein') {
+        const directions = getVeinDirections();
+
+        const { min, max } = blocksById[resourceId].resource;
+        const veinLength = Math.floor(Math.random() * (max - min)) + min;
+        const newElement = { x, y, z };
+
+        for (let i = 0; i < veinLength; i++) {
+          const { nx, ny, nz } = getNextResourceDirection(directions, newElement);
+          if (
+            this.inBounds({ x: nx, y: ny, z: nz }) &&
+            this.getBlock({ x: nx, y: ny, z: nz }).id === blocks.air.id
+          ) {
+            this.setBlockId({ x: nx, y: ny, z: nz }, resourceId);
+            newElement.x = nx;
+            newElement.y = ny;
+            newElement.z = nz;
+          } else {
+            console.log('ASDASD"');
           }
         }
       }
@@ -116,7 +183,7 @@ export default class World extends THREE.Group {
           if (blockId && !this.isBlockObscured({ x, y, z })) {
             matrix.setPosition(x + 0.5, y + 0.5, z + 0.5);
             instancedMesh.setMatrixAt(instanceId, matrix);
-            instancedMesh.setColorAt(instanceId, new THREE.Color(blocksList[blockId].color));
+            instancedMesh.setColorAt(instanceId, new THREE.Color(blocksById[blockId].color));
             instancedMesh.count++;
             this.setBlockInstanceId({ x, y, z }, instanceId);
           }
@@ -186,22 +253,13 @@ export default class World extends THREE.Group {
   }
 
   isBlockObscured({ x, y, z }) {
-    const directions = [
-      { x: -1, y: 0, z: 0 }, // left
-      { x: 1, y: 0, z: 0 }, // right
-      { x: 0, y: 0, z: -1 }, // backward
-      { x: 0, y: 0, z: 1 }, // forward
-      { x: 0, y: 1, z: 0 }, // up
-      { x: 0, y: -1, z: 0 }, // down
-    ];
-
-    for (const dir of directions) {
+    for (const dir of sixDirections) {
       const nx = x + dir.x;
       const ny = y + dir.y;
       const nz = z + dir.z;
       if (!this.inBounds({ x: nx, y: ny, z: nz })) return false;
       const neighbor = this.getBlock({ x: nx, y: ny, z: nz });
-      if (!neighbor || neighbor.id === blocks.empty.id) return false;
+      if (!neighbor || neighbor.id === blocks.air.id) return false;
     }
     return true;
   }

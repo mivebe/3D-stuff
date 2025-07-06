@@ -1,6 +1,7 @@
 import GUI from 'three/addons/libs/lil-gui.module.min.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { blocks, resourcesList } from '../blocks';
+import { DEF_HEIGHT } from '../config';
 
 export default class DevUI extends GUI {
   constructor() {
@@ -34,7 +35,7 @@ export default class DevUI extends GUI {
       .name('World Size')
       .onChange(() => this.debounceUpdate('worldDeboundce', world, 'Regenerating world...'));
     worldFolder
-      .add(world, 'height', 16, 64, 1)
+      .add(world, 'height', DEF_HEIGHT / 2, DEF_HEIGHT * 2, 1)
       .name('World Height')
       .onChange(() => this.debounceUpdate('worldDeboundce', world, 'Regenerating world...'));
 
@@ -52,34 +53,34 @@ export default class DevUI extends GUI {
       .name('Offset')
       .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
 
-    const resourcesFolder = this.addFolder('Resources');
-    resourcesList.forEach((resource) => {
-      const singleResourcFolder = resourcesFolder.addFolder(resource.name);
-      singleResourcFolder
-        .add(blocks[resource.name].resource, 'abundance', 0.01, 0.99, 0.01)
-        .name('Abundance')
-        .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
-      singleResourcFolder
-        .add(blocks[resource.name].resource.clusterSize, 'cx', 10, 100, 1)
-        .name('Cluster Size X')
-        .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
-      singleResourcFolder
-        .add(blocks[resource.name].resource.clusterSize, 'cy', 10, 100, 1)
-        .name('Cluster Size Y')
-        .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
-      singleResourcFolder
-        .add(blocks[resource.name].resource.clusterSize, 'cz', 10, 100, 1)
-        .name('Cluster Size Z')
-        .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
-    });
+    // const resourcesFolder = this.addFolder('Resources');
+    // resourcesList.forEach((resource) => {
+    //   const singleResourcFolder = resourcesFolder.addFolder(resource.name);
+    //   singleResourcFolder
+    //     .add(blocks[resource.name].resource, 'abundance', 0.01, 0.99, 0.01)
+    //     .name('Abundance')
+    //     .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
+    //   singleResourcFolder
+    //     .add(blocks[resource.name].resource.clusterSize, 'cx', 10, 100, 1)
+    //     .name('Cluster Size X')
+    //     .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
+    //   singleResourcFolder
+    //     .add(blocks[resource.name].resource.clusterSize, 'cy', 10, 100, 1)
+    //     .name('Cluster Size Y')
+    //     .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
+    //   singleResourcFolder
+    //     .add(blocks[resource.name].resource.clusterSize, 'cz', 10, 100, 1)
+    //     .name('Cluster Size Z')
+    //     .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
+    // });
   }
 
   createCameradUI(camera) {
-    console.log(camera);
+    // console.log(camera);
   }
 
   createRendereUI(renderer) {
-    console.log(renderer);
+    // console.log(renderer);
   }
 
   debounceUpdate(timeoutName, object, message, delay = 500) {
