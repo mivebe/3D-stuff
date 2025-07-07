@@ -1,3 +1,4 @@
+import { frames } from '../../public/textures/blocks/asd';
 import { blocks } from '../blocks';
 import { sixDirections } from './constants';
 
@@ -65,4 +66,20 @@ export const getClusterDirections = () => {
     }
   }
   return allDirections;
+};
+
+export const getUVs = (frameName, atlasSize, tileSize) => {
+  const frameMeta = frames.find((f) => f.filename === frameName);
+
+  if (!frameMeta) {
+    console.log('No frame meta found for:', frameName);
+    return [0, 0, 1, 1];
+  }
+
+  const u0 = frameMeta.frame.x / atlasSize.w;
+  const v0 = frameMeta.frame.y / atlasSize.h;
+  const u1 = (frameMeta.frame.x + tileSize.w) / atlasSize.w;
+  const v1 = (frameMeta.frame.y + tileSize.h) / atlasSize.h;
+
+  return [u0, v0, u1, v1];
 };

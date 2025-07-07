@@ -8,9 +8,11 @@ import {
   getClusterDirections,
   getNextResourceDirection,
   getRandomResource,
+  getUVs,
   getVeinDirections,
 } from './utils';
-import { sixDirections } from './constants';
+import { blockFaceTextures, sixDirections, vertexShader, fragmentShader } from './constants';
+import { frames, meta } from '../../public/textures/blocks/asd';
 
 export default class World extends THREE.Group {
   /** 
@@ -41,10 +43,11 @@ export default class World extends THREE.Group {
 
   init() {
     const rng = new RNG(this.params.seed);
+    const simplex = new SimplexNoise(rng);
 
     this.initializeTerrainData();
-    this.generateTerrain(rng);
-    this.generateResources(rng);
+    this.generateTerrain(simplex);
+    this.generateResources();
     this.generateMeshes();
   }
 
@@ -62,9 +65,8 @@ export default class World extends THREE.Group {
     }
   }
 
-  generateTerrain(rng) {
+  generateTerrain(simplex) {
     const { scale, magnitude, offset } = this.params.terrain;
-    const simplex = new SimplexNoise(rng);
 
     for (let x = 0; x < this.size; x++) {
       for (let z = 0; z < this.size; z++) {
@@ -105,9 +107,7 @@ export default class World extends THREE.Group {
     }
   }
 
-  generateResources(rng) {
-    const simplex = new SimplexNoise(rng);
-
+  generateResources() {
     for (let i = 0; i < this.resourceFlags.length; i++) {
       const { x, y, z, depth } = this.resourceFlags[i];
       const possibleResources = resourcesList.filter(
@@ -169,7 +169,37 @@ export default class World extends THREE.Group {
   generateMeshes() {
     const maxCount = this.size * this.size * this.height;
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshLambertMaterial();
+
+    const texture = new THREE.TextureLoader().load('/textures/blocks/asd.png');
+    // texture.colorSpace = THREE.SRGBColorSpace;
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.NearestFilter;
+
+    const atlasSize = meta.size;
+    const tileSize = frames[0].sourceSize;
+
+    const faceUVs = [];
+    const texturedBlockIds = Object.keys(blockFaceTextures);
+    texturedBlockIds.forEach((blockId) => {
+      const faces = blockFaceTextures[blockId];
+      faceUVs.push(getUVs(faces.top, atlasSize, tileSize));
+      faceUVs.push(getUVs(faces.bottom, atlasSize, tileSize));
+      faceUVs.push(getUVs(faces.side, atlasSize, tileSize));
+    });
+    console.log(faceUVs);
+    console.log(texturedBlockIds);
+
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        atlas: { value: texture },
+        faceUVs: { value: faceUVs.map((uv) => new THREE.Vector4(...uv)) },
+      },
+      vertexShader,
+      fragmentShader,
+    });
+
+    const blockTypeAttr = new Float32Array(maxCount);
+    // let instanceIdx = 0;
     const matrix = new THREE.Matrix4();
     const instancedMesh = new THREE.InstancedMesh(geometry, material, maxCount);
     instancedMesh.count = 0;
@@ -179,24 +209,30 @@ export default class World extends THREE.Group {
         for (let z = 0; z < this.size; z++) {
           const blockId = this.getBlock({ x, y, z }).id || 0;
           const instanceId = instancedMesh.count;
-
           if (blockId && !this.isBlockObscured({ x, y, z })) {
             matrix.setPosition(x + 0.5, y + 0.5, z + 0.5);
             instancedMesh.setMatrixAt(instanceId, matrix);
-            instancedMesh.setColorAt(instanceId, new THREE.Color(blocksById[blockId].color));
+
+            const blockTypeIdx = texturedBlockIds.indexOf(String(blockId));
+
+            blockTypeAttr[instanceId] = blockTypeIdx;
             instancedMesh.count++;
             this.setBlockInstanceId({ x, y, z }, instanceId);
           }
         }
       }
     }
-
+    instancedMesh.geometry.setAttribute(
+      'blockType',
+      new THREE.InstancedBufferAttribute(blockTypeAttr, 1)
+    );
     this.add(instancedMesh);
   }
 
   regenerate() {
     this.clear();
     this.data = [];
+    this.resourceFlags = [];
 
     this.init();
   }

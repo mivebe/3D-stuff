@@ -1,6 +1,25 @@
-// https://github.com/Mojang/bedrock-samples
+// import { SRGBColorSpace, TextureLoader } from 'three';
 
-import { DEF_HEIGHT } from './config';
+// const textureLoader = new TextureLoader();
+
+// const loadTexture = (path) => {
+//   const texture = textureLoader.load(path);
+//   texture.colorSpace = SRGBColorSpace;
+//   return texture;
+// };
+
+// const textures = {
+//   grass_block_top: loadTexture('/textures/blocks/grass_block_top.png'),
+//   grass_block_side: loadTexture('/textures/blocks/grass_block_side.png'),
+//   dirt_block: loadTexture('/textures/blocks/dirt_block.png'),
+//   stone_side: loadTexture('/textures/blocks/stone_side.png'),
+//   coal_ore: loadTexture('/textures/blocks/coal_ore.png'),
+//   iron_ore: loadTexture('/textures/blocks/iron_ore.png'),
+//   gold_ore: loadTexture('/textures/blocks/gold_ore.png'),
+//   diamond_ore: loadTexture('/textures/blocks/diamond_ore.png'),
+//   grass_block_side_snow: loadTexture('/textures/blocks/grass_block_side_snow.png'),
+// };
+// console.log(textures);
 
 const RESOURCE_TYPES = {
   CLUSTER: 'cluster',
@@ -88,10 +107,10 @@ export const blocks = {
 };
 
 export const blocksById = Object.fromEntries(
-  Object.entries(blocks).map(([key, value]) => [value.id, value])
+  Object.entries(blocks).map(([_, value]) => [value.id, value])
 );
 export const blocksByName = Object.fromEntries(
-  Object.entries(blocks).map(([key, value]) => [value.name, value])
+  Object.entries(blocks).map(([_, value]) => [value.name, value])
 );
 export const blocksList = Object.values(blocks);
 export const resourcesList = Object.values(blocks).filter((b) => b.resource);
