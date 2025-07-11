@@ -26,6 +26,11 @@ export const blockFaceTextures = {
     bottom: 'diamond_ore.png',
     side: 'diamond_ore.png',
   },
+  [blocks.oak_log.id]: {
+    top: 'log_oak_top.png',
+    bottom: 'log_oak_top.png',
+    side: 'log_oak.png',
+  },
 };
 
 export const vertexShader = `

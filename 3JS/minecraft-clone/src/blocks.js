@@ -104,6 +104,11 @@ export const blocks = {
       constraints: { minDepth: 5 },
     },
   },
+  oak_log: {
+    id: 8,
+    name: 'oak_log',
+    color: 0x8b4513,
+  },
 };
 
 export const blocksById = Object.fromEntries(
