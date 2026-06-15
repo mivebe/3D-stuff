@@ -6,15 +6,20 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build:atlas": "node scripts/build-atlas.mjs"
   },
   "devDependencies": {
-    "@types/three": "^0.177.0",
-    "eslint": "^9.28.0",
-    "prettier": "^3.5.3",
-    "vite": "^6.3.5"
+    "@types/three": "^0.184.1",
+    "eslint": "^10.5.0",
+    "pngjs": "^7.0.0",
+    "prettier": "^3.8.4",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.9"
   },
   "dependencies": {
-    "three": "^0.177.0"
+    "three": "^0.184.0"
   }
 }
