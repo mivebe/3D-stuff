@@ -1,14 +1,14 @@
-import { frames } from '../../public/textures/blocks/asd';
+import { frames } from './textureAtlas';
 import { blocks } from '../blocks';
 import { sixDirections } from './constants';
 
-export const getRandomResource = (possibleResources) => {
+export const getRandomResource = (possibleResources, rng = Math) => {
   if (possibleResources.length > 0) {
     const abundances = possibleResources.map((res) => res.resource.abundance ?? 0);
     const totalAbundance = abundances.reduce((sum, val) => sum + val, 0);
 
     if (totalAbundance > 0) {
-      let randomValue = Math.random() * totalAbundance;
+      let randomValue = rng.random() * totalAbundance;
       let selectedResource = possibleResources[0];
 
       for (let j = 0; j < possibleResources.length; j++) {
@@ -24,8 +24,8 @@ export const getRandomResource = (possibleResources) => {
   }
 };
 
-export const getVeinDirections = () => {
-  const randomGeneralDir = sixDirections[Math.floor(Math.random() * sixDirections.length)];
+export const getVeinDirections = (rng = Math) => {
+  const randomGeneralDir = sixDirections[Math.floor(rng.random() * sixDirections.length)];
   const randomDir = Object.entries(randomGeneralDir).filter(([_, val]) => val !== 0)[0];
 
   const directions = [];
@@ -44,8 +44,8 @@ export const getVeinDirections = () => {
   return directions;
 };
 
-export const getNextResourceDirection = (directions, newElement) => {
-  const randomDir = directions[Math.floor(Math.random() * directions.length)];
+export const getNextResourceDirection = (directions, newElement, rng = Math) => {
+  const randomDir = directions[Math.floor(rng.random() * directions.length)];
 
   return {
     nx: newElement.x + randomDir.x,
