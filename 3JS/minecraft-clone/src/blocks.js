@@ -109,6 +109,19 @@ export const blocks = {
     name: 'oak_log',
     color: 0x8b4513,
   },
+  oak_leaves: {
+    id: 9,
+    name: 'oak_leaves',
+    color: 0x4a8f2f,
+    transparent: true, // cutout texture; does not occlude neighbor faces
+  },
+  water: {
+    id: 10,
+    name: 'water',
+    color: 0x3f76e4,
+    transparent: true, // translucent; does not occlude neighbor faces
+    liquid: true, // non-solid (no collision); rendered as a separate mesh
+  },
 };
 
 export const blocksById = Object.fromEntries(

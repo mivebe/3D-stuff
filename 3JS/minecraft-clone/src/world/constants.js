@@ -31,6 +31,11 @@ export const blockFaceTextures = {
     bottom: 'log_oak_top.png',
     side: 'log_oak.png',
   },
+  [blocks.oak_leaves.id]: {
+    top: 'oak_leaves.png',
+    bottom: 'oak_leaves.png',
+    side: 'oak_leaves.png',
+  },
 };
 
 export const vertexShader = `
@@ -47,9 +52,12 @@ export const vertexShader = `
       }
     `;
 
-export const fragmentShader = `
+// The faceUVs array must hold 3 entries (top/bottom/side) per block type, so its
+// size is built from the actual block count - a fixed [16] silently overflowed
+// once there were more than ~5 textured blocks, garbling the higher ids.
+export const buildFragmentShader = (blockTypeCount) => `
       uniform sampler2D atlas;
-      uniform vec4 faceUVs[16]; // up to 16 block types
+      uniform vec4 faceUVs[${blockTypeCount * 3}];
       varying float vBlockType;
       varying vec3 vPosition;
       varying vec3 vNormal;
@@ -89,6 +97,8 @@ export const fragmentShader = `
         }
 
         vec2 atlasUV = uvRect.xy + uv * (uvRect.zw - uvRect.xy);
-        gl_FragColor = texture2D(atlas, atlasUV);
+        vec4 color = texture2D(atlas, atlasUV);
+        if (color.a < 0.5) discard; // cutout transparency (leaves)
+        gl_FragColor = color;
       }
     `;
