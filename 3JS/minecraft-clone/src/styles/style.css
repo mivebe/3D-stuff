@@ -1,3 +1,108 @@
 body {
   margin: 0;
+  overflow: hidden;
+}
+
+#overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+}
+
+#overlay .overlay-panel h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2.5rem;
+}
+
+#overlay .overlay-panel p {
+  margin: 0.25rem 0;
+  opacity: 0.85;
+}
+
+#crosshair {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Authentic Minecraft hotbar rendered from gui/widgets.png.
+   Native sprites: 182x22 hotbar at (0,0), 24x24 selector at (0,22), on a
+   256x256 sheet. Scaled by --hb-scale (must match HOTBAR_SCALE in editor.js). */
+#hotbar {
+  --hb-scale: 3;
+  --cs: calc(9px * var(--hb-scale)); /* isometric cube side */
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(182px * var(--hb-scale));
+  height: calc(22px * var(--hb-scale));
+  background: url('/textures/gui/widgets.png') 0 0 no-repeat;
+  background-size: calc(256px * var(--hb-scale)) calc(256px * var(--hb-scale));
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 5;
+}
+
+#hotbar .hb-icon {
+  position: absolute;
+}
+
+/* Orthographic isometric cube (no perspective), matching the in-game item look:
+   tilt the cube so the top + front + right faces face the camera. */
+#hotbar .hb-cube {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(-30deg) rotateY(-45deg);
+}
+
+#hotbar .hb-face {
+  position: absolute;
+  width: var(--cs);
+  height: var(--cs);
+  left: calc(var(--cs) / -2);
+  top: calc(var(--cs) / -2);
+  background-size: cover;
+  image-rendering: pixelated;
+  backface-visibility: hidden;
+}
+
+#hotbar .hb-face.top {
+  transform: rotateX(90deg) translateZ(calc(var(--cs) / 2));
+}
+#hotbar .hb-face.front {
+  transform: translateZ(calc(var(--cs) / 2));
+  filter: brightness(0.8);
+}
+#hotbar .hb-face.right {
+  transform: rotateY(90deg) translateZ(calc(var(--cs) / 2));
+  filter: brightness(0.62);
+}
+
+#hotbar .hb-selector {
+  position: absolute;
+  background: url('/textures/gui/widgets.png') 0 calc(-22px * var(--hb-scale)) no-repeat;
+  background-size: calc(256px * var(--hb-scale)) calc(256px * var(--hb-scale));
+  image-rendering: pixelated;
 }

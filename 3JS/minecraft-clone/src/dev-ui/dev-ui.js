@@ -29,15 +29,24 @@ export default class DevUI extends GUI {
   }
 
   createWorldUI(world) {
+    // `world` is the ChunkManager: chunks are a fixed CHUNK_SIZE, so there's no
+    // world-size control; height + params changes regenerate all loaded chunks.
     const worldFolder = this.addFolder('World');
-    worldFolder
-      .add(world, 'size', 16, 128, 1)
-      .name('World Size')
-      .onChange(() => this.debounceUpdate('worldDeboundce', world, 'Regenerating world...'));
     worldFolder
       .add(world, 'height', DEF_HEIGHT / 2, DEF_HEIGHT * 2, 1)
       .name('World Height')
       .onChange(() => this.debounceUpdate('worldDeboundce', world, 'Regenerating world...'));
+    worldFolder
+      .add(
+        {
+          clearEdits: () => {
+            world.clearSavedEdits();
+            world.regenerate();
+          },
+        },
+        'clearEdits'
+      )
+      .name('Clear Saved Edits');
 
     const noiseFolder = this.addFolder('Noise');
     noiseFolder
@@ -53,26 +62,55 @@ export default class DevUI extends GUI {
       .name('Offset')
       .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
 
-    // const resourcesFolder = this.addFolder('Resources');
-    // resourcesList.forEach((resource) => {
-    //   const singleResourcFolder = resourcesFolder.addFolder(resource.name);
-    //   singleResourcFolder
-    //     .add(blocks[resource.name].resource, 'abundance', 0.01, 0.99, 0.01)
-    //     .name('Abundance')
-    //     .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
-    //   singleResourcFolder
-    //     .add(blocks[resource.name].resource.clusterSize, 'cx', 10, 100, 1)
-    //     .name('Cluster Size X')
-    //     .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
-    //   singleResourcFolder
-    //     .add(blocks[resource.name].resource.clusterSize, 'cy', 10, 100, 1)
-    //     .name('Cluster Size Y')
-    //     .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
-    //   singleResourcFolder
-    //     .add(blocks[resource.name].resource.clusterSize, 'cz', 10, 100, 1)
-    //     .name('Cluster Size Z')
-    //     .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
-    // });
+    const waterFolder = this.addFolder('Water');
+    waterFolder
+      .add(world.params.water, 'enabled')
+      .name('Enabled')
+      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
+    waterFolder
+      .add(world.params.water, 'seaLevel', 0, DEF_HEIGHT * 2, 1)
+      .name('Sea Level')
+      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
+    waterFolder.close();
+
+    const treesFolder = this.addFolder('Trees');
+    treesFolder
+      .add(world.params.trees, 'density', 0, 0.3, 0.01)
+      .name('Density')
+      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
+    treesFolder
+      .add(world.params.trees, 'spacing', 1, 12, 1)
+      .name('Spacing')
+      .onChange(() => this.debounceUpdate('worldDeboundce', world, '', 0));
+    treesFolder.close();
+
+    const resourcesFolder = this.addFolder('Resources');
+    const onResourceChange = () => this.debounceUpdate('worldDeboundce', world, '', 0);
+    resourcesList.forEach(({ name, resource }) => {
+      const folder = resourcesFolder.addFolder(name);
+      folder.add(resource, 'abundance', 0.01, 1, 0.01).name('Abundance').onChange(onResourceChange);
+
+      if (resource.type === 'cluster') {
+        folder
+          .add(resource, 'clusterDensity', 0, 1, 0.01)
+          .name('Cluster Density')
+          .onChange(onResourceChange);
+      } else if (resource.type === 'vein') {
+        folder.add(resource, 'min', 1, 10, 1).name('Vein Min').onChange(onResourceChange);
+        folder.add(resource, 'max', 1, 10, 1).name('Vein Max').onChange(onResourceChange);
+      }
+    });
+    resourcesFolder.close();
+  }
+
+  /**
+   * Adds player movement controls.
+   * @param {import('../player/player').default} player
+   */
+  createPlayerUI(player) {
+    const folder = this.addFolder('Player');
+    folder.add(player, 'speed', 1, 100, 1).name('Move Speed');
+    folder.add(player, 'fly').name('Fly Mode (F)').listen();
   }
 
   createCameradUI(camera) {
