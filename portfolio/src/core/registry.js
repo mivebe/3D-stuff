@@ -5,8 +5,9 @@
 // vanilla demos export `mount(container) -> dispose` for raw three.js
 
 import fpsControls from '../demos/fps-controls/index.jsx'
+import characterController from '../demos/character-controller/index.jsx'
 
-export const demos = [fpsControls]
+export const demos = [fpsControls, characterController]
 
 export function getDemo(id) {
   return demos.find((d) => d.id === id)
