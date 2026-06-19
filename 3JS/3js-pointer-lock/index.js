@@ -1,4 +1,5 @@
-import { PointerLockControls } from './node_modules/three/examples/jsm/controls/PointerLockControls.js';
+import * as THREE from 'three';
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
 let camera, scene, renderer, controls;
 
@@ -59,7 +60,7 @@ function init() {
 
     });
 
-    scene.add(controls.getObject());
+    scene.add(controls.object);
 
     const onKeyDown = function (event) {
 
@@ -129,7 +130,7 @@ function init() {
 
     // floor
 
-    let floorGeometry = new THREE.PlaneBufferGeometry(2000, 2000, 100, 100);
+    let floorGeometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
     floorGeometry.rotateX(- Math.PI / 2);
 
     // vertex displacement
@@ -169,7 +170,7 @@ function init() {
 
     // objects
 
-    const boxGeometry = new THREE.BoxBufferGeometry(20, 20, 20).toNonIndexed();
+    const boxGeometry = new THREE.BoxGeometry(20, 20, 20).toNonIndexed();
 
     position = boxGeometry.attributes.position;
     const colorsBox = [];
@@ -228,7 +229,7 @@ function animate() {
 
     if (controls.isLocked === true) {
 
-        raycaster.ray.origin.copy(controls.getObject().position);
+        raycaster.ray.origin.copy(controls.object.position);
         raycaster.ray.origin.y -= 10;
 
         const intersections = raycaster.intersectObjects(objects);
@@ -259,12 +260,12 @@ function animate() {
         controls.moveRight(- velocity.x * delta);
         controls.moveForward(- velocity.z * delta);
 
-        controls.getObject().position.y += (velocity.y * delta); // new behavior
+        controls.object.position.y += (velocity.y * delta); // new behavior
 
-        if (controls.getObject().position.y < 10) {
+        if (controls.object.position.y < 10) {
 
             velocity.y = 0;
-            controls.getObject().position.y = 10;
+            controls.object.position.y = 10;
 
             canJump = true;
 

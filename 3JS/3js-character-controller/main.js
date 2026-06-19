@@ -1,8 +1,8 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
+import * as THREE from 'three';
 
-import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/FBXLoader.js';
-import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118.1/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // import BasicCharacterControllerProxy from "./BasicCharacterControllerProxy.js"
 // import BasicCharacterController from "./BasicCharacterController.js"
@@ -43,7 +43,7 @@ class BasicCharacterController {
 
   _LoadModels() {
     const loader = new FBXLoader();
-    loader.setPath('./resources/zombie/');
+    loader.setPath('/resources/zombie/');
     loader.load('mremireh_o_desbiens.fbx', (fbx) => {
       fbx.scale.setScalar(0.1);
       fbx.traverse(c => {
@@ -71,7 +71,7 @@ class BasicCharacterController {
       };
 
       const loader = new FBXLoader(this._manager);
-      loader.setPath('./resources/zombie/');
+      loader.setPath('/resources/zombie/');
       loader.load('walk.fbx', (a) => { _OnLoad('walk', a); });
       loader.load('run.fbx', (a) => { _OnLoad('run', a); });
       loader.load('idle.fbx', (a) => { _OnLoad('idle', a); });
@@ -476,7 +476,7 @@ class CharacterControllerDemo {
     this._threejs = new THREE.WebGLRenderer({
       antialias: true,
     });
-    this._threejs.outputEncoding = THREE.sRGBEncoding;
+    this._threejs.outputColorSpace = THREE.SRGBColorSpace;
     this._threejs.shadowMap.enabled = true;
     this._threejs.shadowMap.type = THREE.PCFSoftShadowMap;
     this._threejs.setPixelRatio(window.devicePixelRatio);
@@ -524,14 +524,14 @@ class CharacterControllerDemo {
 
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load([
-      './resources/posx.jpg',
-      './resources/negx.jpg',
-      './resources/posy.jpg',
-      './resources/negy.jpg',
-      './resources/posz.jpg',
-      './resources/negz.jpg',
+      '/resources/posx.jpg',
+      '/resources/negx.jpg',
+      '/resources/posy.jpg',
+      '/resources/negy.jpg',
+      '/resources/posz.jpg',
+      '/resources/negz.jpg',
     ]);
-    texture.encoding = THREE.sRGBEncoding;
+    texture.colorSpace = THREE.SRGBColorSpace;
     this._scene.background = texture;
 
     const plane = new THREE.Mesh(
@@ -583,7 +583,7 @@ class CharacterControllerDemo {
 
   _LoadModel() {
     const loader = new GLTFLoader();
-    loader.load('./resources/thing.glb', (gltf) => {
+    loader.load('/resources/thing.glb', (gltf) => {
       gltf.scene.traverse(c => {
         c.castShadow = true;
       });

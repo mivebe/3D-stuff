@@ -7,3 +7,7 @@ body {
     padding: 0;
     overscroll-behavior: none;
   }
+
+.control-inactive {
+    opacity: 0.5;
+}

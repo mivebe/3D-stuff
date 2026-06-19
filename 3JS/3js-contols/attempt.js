@@ -1,11 +1,9 @@
-import Stats from './node_modules/three/examples/jsm/libs/stats.module.js';
-import { GLTFLoader } from "./node_modules/three/examples/jsm/loaders/GLTFLoader.js";
-import { RGBELoader } from './node_modules/three/examples/jsm/loaders/RGBELoader.js';
-import { DRACOLoader } from "./node_modules/three/examples/jsm/loaders/DRACOLoader.js";
-import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js';
-import { MD2CharacterComplex } from './node_modules/three/examples/jsm/misc/MD2CharacterComplex.js';
-import { Gyroscope } from './node_modules/three/examples/jsm/misc/Gyroscope.js';
-import { Loader } from "./node_modules/three/src/loaders/Loader.js"
+import * as THREE from 'three';
+import Stats from 'three/addons/libs/stats.module.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let SCREEN_WIDTH = window.innerWidth;
 let SCREEN_HEIGHT = window.innerHeight;
@@ -97,8 +95,8 @@ function init() {
 
     //  GROUND
 
-    const gt = new THREE.TextureLoader().load("./textures/grasslight-big.jpg");
-    const gg = new THREE.PlaneBufferGeometry(5000, 5000);
+    const gt = new THREE.TextureLoader().load("/textures/grasslight-big.jpg");
+    const gg = new THREE.PlaneGeometry(5000, 5000);
     const gm = new THREE.MeshPhongMaterial({ color: 0xffffff, map: gt });
 
     const ground = new THREE.Mesh(gg, gm);
@@ -106,7 +104,7 @@ function init() {
     ground.material.map.repeat.set(5, 5);
     ground.material.map.wrapS = THREE.RepeatWrapping;
     ground.material.map.wrapT = THREE.RepeatWrapping;
-    ground.material.map.encoding = THREE.sRGBEncoding;
+    ground.material.map.colorSpace = THREE.SRGBColorSpace;
     // note that because the ground does not cast a shadow, .castShadow is left false
     ground.receiveShadow = true;
 
@@ -121,7 +119,7 @@ function init() {
 
     //
 
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -140,14 +138,12 @@ function init() {
 
     cameraControls = new OrbitControls(camera, renderer.domElement);
     cameraControls.target.set(0, 0, 0);
-    cameraControls.enableKeys = false;
     cameraControls.update();
 
     //HDRI
 
     new RGBELoader()
-        .setDataType(THREE.UnsignedByteType)
-        .setPath('./textures/')
+        .setPath('/textures/')
         .load('kloppenheim_2k.hdr', function (texture) {
 
             const envMap = pmremGenerator.fromEquirectangular(texture).texture;
@@ -167,10 +163,10 @@ function init() {
 
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath("./node_modules/three/examples/js/libs/draco/");
+    dracoLoader.setDecoderPath("/draco/");
     loader.setDRACOLoader(dracoLoader);
 
-    loader.load("./models/warrior.glb", function (gltf) {
+    loader.load("/models/warrior.glb", function (gltf) {
         model = gltf.scene
         scene.add(model);
         model.scale.set(30, 30, 30);

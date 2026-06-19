@@ -1,9 +1,9 @@
-import * as THREE from 'three/build/three.module.js';
+import * as THREE from 'three';
 
-import Stats from 'three/examples/jsm/libs/stats.module.js';
-import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import Stats from 'three/addons/libs/stats.module.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 
 let model, skeleton, mixer, clock,stats;
@@ -32,7 +32,7 @@ const canvas = document.getElementById('canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });    // must be defined here as constant not beforehand as let
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.shadowMap.enabled = true;
 
 clock = new THREE.Clock();
@@ -66,7 +66,7 @@ scene.add(mesh);
 // loader
 
 const loader = new GLTFLoader();
-loader.load('models/Xbot.glb', function (gltf) {
+loader.load('/models/Xbot.glb', function (gltf) {
 
 	model = gltf.scene;
 	scene.add(model);

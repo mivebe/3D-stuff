@@ -1,10 +1,10 @@
-import file1 from '../assets/Orbitron-Black.fnt';
+import file1 from '../assets/Orbitron-Black.fnt?url';
 import atlas1 from '../assets/Orbitron-Black.png';
-import file2 from '../assets/MontserratAlternates-Bold.fnt';
+import file2 from '../assets/MontserratAlternates-Bold.fnt?url';
 import atlas2 from '../assets/MontserratAlternates-Bold.png';
-import file3 from '../assets/ArchivoBlack-Regular.fnt';
+import file3 from '../assets/ArchivoBlack-Regular.fnt?url';
 import atlas3 from '../assets/ArchivoBlack-Regular.png';
-import file4 from '../assets/OpenSans-SemiBold.fnt';
+import file4 from '../assets/OpenSans-SemiBold.fnt?url';
 import atlas4 from '../assets/OpenSans-SemiBold.png';
 
 export default {

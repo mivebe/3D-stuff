@@ -1,8 +1,9 @@
-import Stats from 'three/examples/jsm/libs/stats.module';
+import * as THREE from 'three';
+import Stats from 'three/addons/libs/stats.module.js';
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { MD2CharacterComplex } from 'three/examples/jsm/misc/MD2CharacterComplex';
-import { Gyroscope } from 'three/examples/jsm/misc/Gyroscope';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { MD2CharacterComplex } from 'three/addons/misc/MD2CharacterComplex.js';
+import { Gyroscope } from 'three/addons/misc/Gyroscope.js';
 
 let SCREEN_WIDTH = window.innerWidth;
 let SCREEN_HEIGHT = window.innerHeight;
@@ -73,8 +74,8 @@ function init() {
 
     //  GROUND
 
-    const gt = new THREE.TextureLoader().load("./grasslight-big.jpg");
-    const gg = new THREE.PlaneBufferGeometry(16000, 16000);
+    const gt = new THREE.TextureLoader().load("/textures/grasslight-big.jpg");
+    const gg = new THREE.PlaneGeometry(16000, 16000);
     const gm = new THREE.MeshPhongMaterial({ color: 0xffffff, map: gt });
 
     const ground = new THREE.Mesh(gg, gm);
@@ -82,7 +83,7 @@ function init() {
     ground.material.map.repeat.set(64, 64);
     ground.material.map.wrapS = THREE.RepeatWrapping;
     ground.material.map.wrapT = THREE.RepeatWrapping;
-    ground.material.map.encoding = THREE.sRGBEncoding;
+    ground.material.map.colorSpace = THREE.SRGBColorSpace;
     // note that because the ground does not cast a shadow, .castShadow is left false
     ground.receiveShadow = true;
 
@@ -97,7 +98,7 @@ function init() {
 
     //
 
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -116,14 +117,13 @@ function init() {
 
     cameraControls = new OrbitControls(camera, renderer.domElement);
     cameraControls.target.set(0, 50, 0);
-    cameraControls.enableKeys = false;
     cameraControls.update();
 
     // CHARACTER
 
     const configOgro = {
 
-        baseUrl: "./models/",
+        baseUrl: "/models/",
 
         body: "ogro.md2",
         skins: ["grok.jpg", "ogrobase.png", "arboshak.png", "ctf_r.png", "ctf_b.png", "darkam.png", "freedom.png",

@@ -1,3 +1,7 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
 var camera, fakeCamera, controls, scene, renderer, labelRenderer;
 var solarPlane, earth, moon;
 var angle = 0;
@@ -27,7 +31,7 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    labelRenderer = new THREE.CSS2DRenderer();
+    labelRenderer = new CSS2DRenderer();
     labelRenderer.setSize(window.innerWidth, window.innerHeight);
     labelRenderer.domElement.style.position = 'absolute';
     labelRenderer.domElement.style.top = '0';
@@ -41,7 +45,7 @@ function init() {
     buildScene();
 
     fakeCamera = camera.clone();
-    controls = new THREE.OrbitControls(fakeCamera, renderer.domElement);
+    controls = new OrbitControls(fakeCamera, renderer.domElement);
     controls.enablePan = false;
     controls.enableDamping = false;
 }
@@ -71,7 +75,7 @@ function render() {
 }
 
 function createBody(name, parent) {
-    var geometry = new THREE.CubeGeometry(1, 1, 1);
+    var geometry = new THREE.BoxGeometry(1, 1, 1);
     const body = new THREE.Mesh(geometry, new THREE.MeshNormalMaterial());
     body.position.set(1, 1, 1);
     body.scale.set(.3, .3, .3);
@@ -90,5 +94,5 @@ function makeTextLabel(label) {
     var text = document.createElement('div');
     text.style.color = 'rgb(255, 255, 255)';
     text.textContent = label;
-    return new THREE.CSS2DObject(text);
+    return new CSS2DObject(text);
 }

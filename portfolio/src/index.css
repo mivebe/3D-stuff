@@ -1,0 +1,31 @@
+:root {
+  color-scheme: dark;
+  --bg: #0e0e12;
+  --panel: #16161d;
+  --text: #e6e6ee;
+  --muted: #9a9aa8;
+  --accent: #6ee7ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

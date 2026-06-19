@@ -1,9 +1,10 @@
-import { GLTFLoader } from "./node_modules/three/examples/jsm/loaders/GLTFLoader.js";
-import { FBXLoader } from "./node_modules/three/examples/jsm/loaders/FBXLoader.js";
-import { OrbitControls } from "./node_modules/three/examples/jsm/controls/OrbitControls.js";
-import Stats from "./node_modules/three/examples/jsm/libs/stats.module.js";
-import { GUI } from "./node_modules/three/examples/jsm/libs/dat.gui.module.js";
-import { RGBELoader } from "./node_modules/three/examples/jsm/loaders/RGBELoader.js"
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import Stats from 'three/addons/libs/stats.module.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
 let scene, renderer, camera, stats;
 let model, skeleton, mixer, clock;
@@ -53,13 +54,13 @@ function init() {
 
     // ground
 
-    const mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(100, 100), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
     mesh.rotation.x = - Math.PI / 2;
     mesh.receiveShadow = true;
     scene.add(mesh);
 
     const loader = new GLTFLoader();
-    loader.load('models/Xbot.glb', function (gltf) {
+    loader.load('/models/Xbot.glb', function (gltf) {
 
         model = gltf.scene;
         scene.add(model);
@@ -123,7 +124,7 @@ function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
 
@@ -198,18 +199,15 @@ function createPanel() {
 
     crossFadeControls.forEach(function (control) {
 
-        control.classList1 = control.domElement.parentElement.parentElement.classList;
-        control.classList2 = control.domElement.previousElementSibling.classList;
-
         control.setInactive = function () {
 
-            control.classList2.add('control-inactive');
+            control.domElement.classList.add('control-inactive');
 
         };
 
         control.setActive = function () {
 
-            control.classList2.remove('control-inactive');
+            control.domElement.classList.remove('control-inactive');
 
         };
 

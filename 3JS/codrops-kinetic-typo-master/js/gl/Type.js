@@ -3,9 +3,8 @@ import Gl from './index';
 
 // THREE BMFONT TEXT
 import loadFont from 'load-bmfont';
-import createGeometry from 'three-bmfont-text';
-import MSDFShader from 'three-bmfont-text/shaders/msdf';
-import fontFile from '../../assets/Orbitron-Black.fnt';
+import { createTextGeometry as createGeometry, MSDFShader } from './bmfont';
+import fontFile from '../../assets/Orbitron-Black.fnt?url';
 import fontAtlas from '../../assets/Orbitron-Black.png';
 
 export default class extends THREE.Object3D {

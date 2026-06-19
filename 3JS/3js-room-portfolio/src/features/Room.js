@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import App from '../App.js';
 import GSAP from 'gsap';
-import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
+import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 
 export default class Room {
   constructor() {
