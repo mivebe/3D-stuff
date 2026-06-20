@@ -66,6 +66,8 @@ export const projects = [
     category: 'R3F',
     source: '../react-three-fiber/phone-rotation',
     tool: 'vite',
+    // intro timeline settles around 5s, wait for content-filled hero state
+    thumbWait: 6500,
   },
 ]
 

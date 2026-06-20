@@ -13,7 +13,10 @@ export default function Experience({ finish, phase, onPhase, mobile }) {
 
   const settlePosition = mobile ? POSE_MOBILE.settlePosition : POSE.settlePosition
   const settleScale = mobile ? POSE_MOBILE.settleScale : POSE.settleScale
-  const orbitTarget = mobile ? POSE_MOBILE.orbitTarget : POSE.settlePosition
+  // orbit pivots the point the camera already looks at (world origin), so
+  // enabling controls hands over with no jump. targeting the parked phone
+  // instead would snap it to screen center the instant orbit turns on.
+  const orbitTarget = ORBIT.target
 
   useGSAP(
     () => {

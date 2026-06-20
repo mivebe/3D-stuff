@@ -44,11 +44,13 @@ export const POSE = {
 export const POSE_MOBILE = {
   settlePosition: [0, -0.28, 0],
   settleScale: 0.94,
-  orbitTarget: [0, -0.28, 0],
 }
 
-// constrained orbit so the phone tilts to show depth but stays readable
+// constrained orbit so the phone tilts to show depth but stays readable.
+// target is world origin, the point the camera already looks at, so turning
+// orbit on never yanks the parked phone to center.
 export const ORBIT = {
+  target: [0, 0, 0],
   minAzimuth: -0.45,
   maxAzimuth: 0.45,
   minPolar: HALF_PI - 0.4,
