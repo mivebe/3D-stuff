@@ -8,7 +8,7 @@ export const projects = [
     title: 'FPS Controls',
     blurb: 'Pointer-lock first-person movement with jump, sprint and obstacle collision.',
     category: 'R3F',
-    source: '../R3F/fps-controls',
+    source: '../react-three-fiber/fps-controls',
     tool: 'vite',
   },
   {
@@ -16,7 +16,7 @@ export const projects = [
     title: 'Character Controller',
     blurb: 'Third-person locomotion with a crossfaded idle / walk / run state machine.',
     category: 'R3F',
-    source: '../R3F/character-controller',
+    source: '../react-three-fiber/character-controller',
     tool: 'vite',
   },
   {
@@ -24,7 +24,7 @@ export const projects = [
     title: 'Animation Blending',
     blurb: 'Crossfade locomotion and layer additive pose animations with live weights.',
     category: 'R3F',
-    source: '../R3F/animation-blending',
+    source: '../react-three-fiber/animation-blending',
     tool: 'vite',
   },
   {
@@ -32,7 +32,7 @@ export const projects = [
     title: 'Kinetic Typography',
     blurb: 'Live text mapped onto 3D geometry with a scrolling, rippling GLSL shader.',
     category: 'R3F',
-    source: '../R3F/kinetic-type',
+    source: '../react-three-fiber/kinetic-type',
     tool: 'vite',
   },
   {
@@ -40,7 +40,7 @@ export const projects = [
     title: 'Minecraft Chest',
     blurb: 'Click the chest to open it; rearrange a draggable Minecraft-style inventory.',
     category: 'R3F',
-    source: '../R3F/r3f-minecraft-chest',
+    source: '../react-three-fiber/minecraft-chest',
     tool: 'vite',
   },
   {
@@ -48,7 +48,23 @@ export const projects = [
     title: 'Chair Shop',
     blurb: 'Scroll-driven product showcase: rotating chairs with synced color transitions.',
     category: 'R3F',
-    source: '../R3F/chair-shop',
+    source: '../react-three-fiber/chair-shop',
+    tool: 'vite',
+  },
+  {
+    id: 'minecraft-clone',
+    title: 'Minecraft Clone',
+    blurb: 'Voxel world with chunked terrain, an atlas shader, block editing and persistence.',
+    category: 'three.js',
+    source: '../threejs/minecraft-clone',
+    tool: 'vite',
+  },
+  {
+    id: 'phone-rotation',
+    title: 'Phone Rotation',
+    blurb: 'A 3D iPhone in a product-page layout with a GSAP intro and drag-to-orbit.',
+    category: 'three.js',
+    source: '../threejs/phone-rotation',
     tool: 'vite',
   },
 ]

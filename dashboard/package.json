@@ -12,13 +12,9 @@
     "build:all": "node scripts/build-projects.mjs && vite build"
   },
   "dependencies": {
-    "@react-spring/three": "^10.1.1",
-    "@react-three/drei": "^10.0.6",
-    "@react-three/fiber": "^9.1.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.5.0",
-    "three": "^0.177.0"
+    "react-router-dom": "^7.5.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
