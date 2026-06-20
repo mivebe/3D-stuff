@@ -40,7 +40,7 @@ function Character({ groupRef }) {
 
   useEffect(() => {
     actions?.idle?.reset().play()
-    return () => Object.values(actions || {}).forEach((a) => a.stop())
+    return () => Object.values(actions || {}).forEach((a) => a?.stop())
   }, [actions])
 
   const fadeTo = (name) => {
