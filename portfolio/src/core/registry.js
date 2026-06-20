@@ -9,8 +9,16 @@ import characterController from '../demos/character-controller/index.jsx'
 import animationBlending from '../demos/animation-blending/index.jsx'
 import kineticType from '../demos/kinetic-type/index.jsx'
 import minecraftChest from '../demos/minecraft-chest/index.jsx'
+import chairShop from '../demos/chair-shop/index.jsx'
 
-export const demos = [fpsControls, characterController, animationBlending, kineticType, minecraftChest]
+export const demos = [
+  fpsControls,
+  characterController,
+  animationBlending,
+  kineticType,
+  minecraftChest,
+  chairShop,
+]
 
 export function getDemo(id) {
   return demos.find((d) => d.id === id)
