@@ -61,10 +61,10 @@ export const projects = [
   },
   {
     id: 'phone-rotation',
-    title: 'Phone Rotation',
-    blurb: 'A 3D iPhone in a product-page layout with a GSAP intro and drag-to-orbit.',
-    category: 'three.js',
-    source: '../threejs/phone-rotation',
+    title: 'Luxury Phone Showcase',
+    blurb: 'A 3D luxury-phone storefront: GSAP intro, on-glass UI load, live finishes and constrained orbit.',
+    category: 'R3F',
+    source: '../react-three-fiber/phone-rotation',
     tool: 'vite',
   },
 ]

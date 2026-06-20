@@ -1,0 +1,82 @@
+/* self-hosted, latin-subset variable fonts (no external calls) */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 300 500;
+  font-display: swap;
+  src: url('./assets/fonts/fraunces-latin-var.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url('./assets/fonts/inter-latin-var.woff2') format('woff2');
+}
+
+:root {
+  color-scheme: dark;
+
+  --bg: #0a0a0b;
+  --bg-elev: #121214;
+  --panel: #16161a;
+  --text: #f5f3ee;
+  --muted: #8d8a83;
+  --faint: #5c5a55;
+  --line: rgba(245, 243, 238, 0.09);
+  --gold: #c9a96a;
+  --gold-bright: #e4cb96;
+  --gold-soft: rgba(201, 169, 106, 0.14);
+
+  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  margin: 0;
+}
+
+::selection {
+  background: var(--gold-soft);
+  color: var(--gold-bright);
+}
+
+/* subtle gold-letterspaced kicker used across sections */
+.eyeline {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+}

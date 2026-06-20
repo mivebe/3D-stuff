@@ -72,11 +72,12 @@ const devUI = new DevUI();
 devUI.init(world, camera, renderer);
 devUI.createPlayerUI(player);
 
-const clock = new THREE.Clock();
+const timer = new THREE.Timer();
 function animate() {
   requestAnimationFrame(animate);
 
-  const dt = clock.getDelta();
+  timer.update();
+  const dt = timer.getDelta();
   player.update(dt);
   world.update(player.position.x, player.position.z); // stream chunks around player
   editor.update();
