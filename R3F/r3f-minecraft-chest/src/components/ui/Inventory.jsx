@@ -101,6 +101,7 @@ const windowStyle = {
 	fontFamily: 'monospace',
 	color: '#444',
 	userSelect: 'none',
+	pointerEvents: 'auto',
 };
 const labelStyle = {
 	fontSize: 18,

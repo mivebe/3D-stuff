@@ -21,7 +21,10 @@ const App = () => {
 					zIndex: 9999,
 					display: 'flex',
 					alignItems: 'center',
-					justifyContent: 'center',
+					justifyContent: 'flex-end',
+					paddingRight: 48,
+					boxSizing: 'border-box',
+					pointerEvents: 'none',
 				}}
 			>
 				<Inventory />

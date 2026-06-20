@@ -6,13 +6,16 @@ import * as THREE from 'three';
 
 import chestOpenSound from '../../assets/sound/open-chest.mp3';
 
+// base-relative so it resolves whether served at root or under a subpath (iframe)
+const MODEL_URL = `${import.meta.env.BASE_URL}models/coffre-minecraft.glb`;
+
 const openChest = new Audio(chestOpenSound);
 
 const Model = () => {
 	const group = useRef();
 	const [isOpen, setIsOpen] = useState(false);
 
-	const { nodes, materials, animations } = useGLTF('../../../models/coffre-minecraft.glb');
+	const { nodes, materials, animations } = useGLTF(MODEL_URL);
 	const { actions } = useAnimations(animations, group);
 
 	const [mixer] = useState(() => new THREE.AnimationMixer());
@@ -61,6 +64,6 @@ const Model = () => {
 	);
 };
 
-useGLTF.preload('../../../models/coffre-minecraft.glb');
+useGLTF.preload(MODEL_URL);
 
 export default Model;
