@@ -1,11 +1,11 @@
 export default [
   {
-    name: "room",
+    name: "livingRoom",
     type: "glbModel",
-    path: "/models/tutorial_room.glb",
+    path: "/models/living-room.glb",
   },
   {
-    name: "screen",
+    name: "tvScreen",
     type: "videoTexture",
     path: "/videos/journey_goty_360p.webm",
   },

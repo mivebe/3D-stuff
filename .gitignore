@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# heavy carpentry CAD source models (cloned from Blender-CAD-CAM)
+threejs/room-portfolio/resources/cad-source

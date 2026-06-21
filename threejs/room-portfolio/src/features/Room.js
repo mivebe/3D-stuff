@@ -1,139 +1,160 @@
 import * as THREE from 'three';
+import gsap from 'gsap';
 import App from '../App.js';
-import GSAP from 'gsap';
-import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
+
+const EYE_HEIGHT = 1.6;
 
 export default class Room {
   constructor() {
     this.experience = new App();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
-    this.time = this.experience.time;
-    this.room = this.resources.items.room;
-    this.actualRoom = this.room.scene;
-    this.roomChildren = {};
 
-    this.lerp = {
-      current: 0,
-      target: 0,
-      ease: 0.1,
-    };
+    // meshes the crosshair can hit, and boxes the player collides with
+    this.interactiveMeshes = [];
+    this.colliders = [];
+    this.doors = [];
 
     this.setModel();
-    this.setAnimation();
-    this.onMouseMove();
+    this.setTV();
+    this.setDoors();
+    this.setInfo();
+    this.setColliders();
   }
 
   setModel() {
-    this.actualRoom.children.forEach((child) => {
-      child.castShadow = true;
-      child.receiveShadow = true;
-
-      if (child instanceof THREE.Group) {
-        child.children.forEach((groupchild) => {
-          // console.log(groupchild.material);
-          groupchild.castShadow = true;
-          groupchild.receiveShadow = true;
-        });
+    this.model = this.resources.items.livingRoom.scene;
+    this.model.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
       }
-
-      // console.log(child);
-
-      if (child.name === 'Aquarium') {
-        // console.log(child);
-        child.children[0].material = new THREE.MeshPhysicalMaterial();
-        child.children[0].material.roughness = 0;
-        child.children[0].material.color.set(0x549dd2);
-        child.children[0].material.ior = 3;
-        child.children[0].material.transmission = 1;
-        child.children[0].material.opacity = 1;
-        child.children[0].material.depthWrite = false;
-        child.children[0].material.depthTest = false;
-      }
-
-      if (child.name === 'Computer') {
-        child.children[1].material = new THREE.MeshBasicMaterial({
-          map: this.resources.items.screen,
-        });
-      }
-
-      if (child.name === 'Mini_Floor') {
-        child.position.x = -0.289521;
-        child.position.z = 8.83572;
-      }
-
-      // if (
-      //     child.name === 'Mailbox' ||
-      //     child.name === 'Lamp' ||
-      //     child.name === 'FloorFirst' ||
-      //     child.name === 'FloorSecond' ||
-      //     child.name === 'FloorThird' ||
-      //     child.name === 'Dirt' ||
-      //     child.name === 'Flower1' ||
-      //     child.name === 'Flower2'
-      // ) {
-      //     child.scale.set(0, 0, 0);
-      // }
-
-      child.scale.set(0, 0, 0);
-      if (child.name === 'Cube') {
-        // child.scale.set(1, 1, 1);
-        child.position.set(0, -1, 0);
-        child.rotation.y = Math.PI / 4;
-      }
-
-      this.roomChildren[child.name.toLowerCase()] = child;
     });
+    this.scene.add(this.model);
+    this.model.updateMatrixWorld(true);
 
-    const width = 0.5;
-    const height = 0.7;
-    const intensity = 1;
-    const rectLight = new THREE.RectAreaLight(
-      0xffffff,
-      intensity,
-      width,
-      height
-    );
-    rectLight.position.set(7.68244, 7, 0.5);
-    rectLight.rotation.x = -Math.PI / 2;
-    rectLight.rotation.z = Math.PI / 4;
-    this.actualRoom.add(rectLight);
-
-    this.roomChildren['rectLight'] = rectLight;
-
-    // const rectLightHelper = new RectAreaLightHelper(rectLight);
-    // rectLight.add(rectLightHelper);
-    // console.log(this.room);
-
-    this.scene.add(this.actualRoom);
-    this.actualRoom.scale.set(0.11, 0.11, 0.11);
+    const floor = this.model.getObjectByName('Floor');
+    this.floorBounds = new THREE.Box3().setFromObject(floor);
+    this.floorY = this.floorBounds.max.y;
   }
 
-  setAnimation() {
-    this.mixer = new THREE.AnimationMixer(this.actualRoom);
-    this.swim = this.mixer.clipAction(this.room.animations[0]);
-    this.swim.play();
+  setTV() {
+    this.tv = this.model.getObjectByName('TV_Screen');
+    if (!this.tv) return;
+
+    this.tvOn = false;
+    this.tvBaseColor = this.tv.material.color.clone();
+
+    this.video = this.resources.items.tvScreen;
+    this.video.flipY = false; // gltf uvs expect unflipped
+
+    // a light that switches on with the screen (dynamic-lighting demo)
+    this.tvLight = new THREE.PointLight('#9fc4ff', 0, 5, 2);
+    const p = new THREE.Vector3();
+    this.tv.getWorldPosition(p);
+    this.tvLight.position.copy(p);
+    this.scene.add(this.tvLight);
+
+    this.tv.userData.interactive = {
+      prompt: () => (this.tvOn ? 'turn off TV' : 'turn on TV'),
+      toggle: () => this.toggleTV(),
+    };
+    this.interactiveMeshes.push(this.tv);
   }
 
-  onMouseMove() {
-    window.addEventListener('mousemove', (e) => {
-      this.rotation =
-        ((e.clientX - window.innerWidth / 2) * 2) / window.innerWidth;
-      this.lerp.target = this.rotation * 0.05;
+  toggleTV() {
+    this.tvOn = !this.tvOn;
+    const m = this.tv.material;
+    if (this.tvOn) {
+      m.map = this.video;
+      m.emissiveMap = this.video;
+      m.emissive = new THREE.Color('#ffffff');
+      m.emissiveIntensity = 1;
+      m.color = new THREE.Color('#ffffff');
+      this.tvLight.intensity = 5;
+    } else {
+      m.map = null;
+      m.emissiveMap = null;
+      m.emissive = new THREE.Color('#000000');
+      m.emissiveIntensity = 0;
+      m.color = this.tvBaseColor.clone();
+      this.tvLight.intensity = 0;
+    }
+    m.needsUpdate = true;
+  }
+
+  setDoors() {
+    // joystick glass door: vertical hinge in world space, swings 90 deg
+    const joystick = this.model.getObjectByName('Door_Joystick');
+    if (joystick) {
+      this.registerDoor(joystick, new THREE.Vector3(0, 1, 0), -Math.PI / 2, 'cabinet', 'world');
+    }
+    // upper flap doors: hinge about each door's own local axis (matches how
+    // they were modelled), opened on local Y by 90 deg
+    for (let i = 1; i <= 9; i++) {
+      const node = this.model.getObjectByName(`Door_Upper_${String(i).padStart(2, '0')}`);
+      if (node) {
+        this.registerDoor(node, new THREE.Vector3(0, 1, 0), Math.PI / 2, 'cabinet', 'local');
+      }
+    }
+  }
+
+  // space 'world' rotates about a fixed axis (pre-multiply); 'local' about the
+  // node's own axis (post-multiply) so it tracks the mesh orientation
+  registerDoor(node, axis, angle, label, space) {
+    const closed = node.quaternion.clone();
+    const delta = new THREE.Quaternion().setFromAxisAngle(axis, angle);
+    const open = space === 'local'
+      ? closed.clone().multiply(delta)
+      : delta.clone().multiply(closed);
+    node.userData.door = { closed, open, isOpen: false, t: 0 };
+    node.userData.interactive = {
+      prompt: () => (node.userData.door.isOpen ? `close ${label}` : `open ${label}`),
+      toggle: () => this.toggleDoor(node),
+    };
+    this.interactiveMeshes.push(node);
+    this.doors.push(node);
+  }
+
+  setInfo() {
+    // first info hotspot (placeholder content); opens a DOM panel
+    const node = this.model.getObjectByName('pc_plate_1');
+    if (!node) return;
+    node.userData.interactive = {
+      prompt: () => 'read',
+      toggle: () => this.experience.panel.open(
+        'About me',
+        '<p>Placeholder. This is where an about-me / projects blurb will go, opened diegetically from inside the room.</p>'
+      ),
+    };
+    this.interactiveMeshes.push(node);
+  }
+
+  toggleDoor(node) {
+    const d = node.userData.door;
+    d.isOpen = !d.isOpen;
+    gsap.to(d, {
+      t: d.isOpen ? 1 : 0,
+      duration: 0.6,
+      ease: 'power2.inOut',
+      onUpdate: () => node.quaternion.copy(d.closed).slerp(d.open, d.t),
     });
   }
 
-  resize() { }
-
-  update() {
-    this.lerp.current = GSAP.utils.interpolate(
-      this.lerp.current,
-      this.lerp.target,
-      this.lerp.ease
-    );
-
-    this.actualRoom.rotation.y = this.lerp.current;
-
-    this.mixer.update(this.time.delta * 0.0009);
+  setColliders() {
+    // only block things that overlap the player's vertical span, so you can
+    // still walk under the upper cabinets
+    const feet = this.floorY + 0.1;
+    const head = this.floorY + 1.7;
+    this.model.traverse((child) => {
+      if (!child.isMesh) return;
+      if (child.name === 'Floor') return;
+      if (child.name.startsWith('Door_')) return;
+      const box = new THREE.Box3().setFromObject(child);
+      if (box.max.y < feet || box.min.y > head) return;
+      this.colliders.push(box);
+    });
   }
+
+  update() {}
 }
