@@ -6,10 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "build:projects": "node scripts/build-projects.mjs",
-    "build:all": "node scripts/build-projects.mjs && vite build",
-    "thumbnails": "node scripts/thumbnails.mjs"
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "^19.1.0",

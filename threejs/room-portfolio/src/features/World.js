@@ -3,7 +3,6 @@ import App from '../App.js';
 
 import Environment from './Environment.js';
 import Room from './Room.js';
-import Shell from './Shell.js';
 
 export default class World extends EventEmitter {
   constructor() {
@@ -16,7 +15,6 @@ export default class World extends EventEmitter {
     this.resources.on('ready', () => {
       this.environment = new Environment();
       this.room = new Room();
-      if (this.room.needsShell) this.shell = new Shell();
       this.emit('worldready');
     });
   }
