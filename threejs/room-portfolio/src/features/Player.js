@@ -3,7 +3,7 @@ import App from '../App.js';
 
 const WALK = 2.6;
 const SPRINT = 4.2;
-const RADIUS = 0.28;
+const RADIUS = 0.22;
 const LOOK = 0.0022;
 const EYE_HEIGHT = 1.6;
 
@@ -16,12 +16,14 @@ export default class Player {
     this.time = this.experience.time;
     this.room = this.experience.world.room;
 
-    this.yaw = Math.PI / 2; // face the tv wall
+    this.yaw = this.room.spawnYaw !== undefined ? this.room.spawnYaw : Math.PI / 2; // face the tv wall
     this.pitch = 0;
     this.keys = {};
     this.locked = false;
 
-    this.position = new THREE.Vector3(0, this.room.floorY + EYE_HEIGHT, 1.4);
+    this.position = this.room.spawn
+      ? this.room.spawn.clone()
+      : new THREE.Vector3(0, this.room.floorY + EYE_HEIGHT, 1.4);
 
     this.bindEvents();
     this.applyRotation();
@@ -92,9 +94,11 @@ export default class Player {
 
   collide() {
     const r = RADIUS;
-    const fb = this.room.floorBounds;
-    this.position.x = Math.max(fb.min.x + r, Math.min(fb.max.x - r, this.position.x));
-    this.position.z = Math.max(fb.min.z + r, Math.min(fb.max.z - r, this.position.z));
+    if (this.room.clampToFloor) {
+      const fb = this.room.floorBounds;
+      this.position.x = Math.max(fb.min.x + r, Math.min(fb.max.x - r, this.position.x));
+      this.position.z = Math.max(fb.min.z + r, Math.min(fb.max.z - r, this.position.z));
+    }
 
     for (const box of this.room.colliders) {
       const minX = box.min.x - r;
