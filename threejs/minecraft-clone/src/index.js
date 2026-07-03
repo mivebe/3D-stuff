@@ -8,12 +8,12 @@ import Editor from './player/editor';
 import { createOverlay } from './player/overlay';
 import { loadPlayerState, savePlayerState } from './world/persistence';
 
-// gui sprite lives in public/; expose it base-relative so the css works whether
-// served at root or under a subpath (dashboard iframe)
-document.documentElement.style.setProperty(
-  '--widgets-url',
-  `url(${import.meta.env.BASE_URL}textures/gui/widgets.png)`,
-);
+// gui sprite lives in public/; resolve to an absolute url before stashing it in a
+// css custom property. a relative url() inside a custom property resolves against
+// the stylesheet that consumes it (the hashed assets/index-*.css), not the
+// document, so a bare "./textures/..." 404s under a subpath (dashboard iframe).
+const widgetsUrl = new URL(`${import.meta.env.BASE_URL}textures/gui/widgets.png`, document.baseURI).href;
+document.documentElement.style.setProperty('--widgets-url', `url("${widgetsUrl}")`);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);

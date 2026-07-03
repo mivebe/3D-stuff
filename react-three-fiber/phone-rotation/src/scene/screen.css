@@ -2,19 +2,137 @@
    screen face by SCREEN_SCALE in PhoneScreen.jsx */
 
 .screen {
+  position: relative;
   width: 232px;
   height: 432px;
   border-radius: 30px;
   overflow: hidden;
-  background: radial-gradient(120% 80% at 50% 0%, #15161c 0%, #060608 60%, #030304 100%);
+  background: #030304;
   color: #f5f3ee;
   font-family: var(--sans, sans-serif);
-  padding: 22px 18px;
   user-select: none;
 }
 
-.screen--off {
-  background: #030304;
+/* ---------- home screen with dummy app icons ---------- */
+.home {
+  position: absolute;
+  inset: 0;
+  padding: 16px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(95% 60% at 50% 0%, #23252f 0%, #0d0e13 68%, #070709 100%);
+}
+/* fades away as the app grows over it */
+.screen--launched .home {
+  animation: homeOut 0.4s ease both;
+}
+@keyframes homeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+.home__status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.home__signal {
+  display: inline-flex;
+  gap: 3px;
+  align-items: flex-end;
+}
+.home__signal i {
+  width: 3px;
+  border-radius: 1px;
+  background: #f5f3ee;
+}
+.home__signal i:nth-child(1) {
+  height: 6px;
+}
+.home__signal i:nth-child(2) {
+  height: 9px;
+}
+.home__signal i:nth-child(3) {
+  height: 12px;
+}
+
+.home__grid {
+  flex: 1;
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px 0;
+  justify-items: center;
+  align-content: start;
+}
+.home__app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+.home__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  box-shadow:
+    0 5px 12px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.home__name {
+  width: 30px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(245, 243, 238, 0.26);
+}
+
+.home__dock {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 10px;
+  border-radius: 24px;
+  background: rgba(245, 243, 238, 0.06);
+  border: 1px solid rgba(245, 243, 238, 0.08);
+}
+.home__dock .home__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+
+/* ---------- the app, growing from the bottom-left corner to fill the screen ---------- */
+.app {
+  position: absolute;
+  inset: 0;
+  padding: 22px 18px;
+  border-radius: 30px;
+  overflow: hidden;
+  background: radial-gradient(120% 80% at 50% 0%, #15161c 0%, #060608 60%, #030304 100%);
+  transform-origin: 0% 100%;
+  animation: appOpen 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* from a near-zero speck at the bottom-left up to the full, centered screen */
+@keyframes appOpen {
+  0% {
+    opacity: 0;
+    transform: scale(0.03);
+    border-radius: 44px;
+  }
+  14% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    border-radius: 30px;
+  }
 }
 
 /* skeleton shimmer */
@@ -183,4 +301,19 @@
 .screen__sub {
   font-size: 12px;
   color: #8d8a83;
+}
+
+/* reduced motion: skip the grow/blur, just fade the app in */
+@media (prefers-reduced-motion: reduce) {
+  .app {
+    animation: fadeApp 0.35s ease both;
+  }
+  @keyframes fadeApp {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }
