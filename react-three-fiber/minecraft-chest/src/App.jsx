@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Loader } from '@react-three/drei';
 import Lights from './components/scene/Lights';
@@ -10,6 +10,10 @@ import Inventory from './components/ui/Inventory';
 import './styles/App.css';
 
 const App = () => {
+	// single source of truth: lid animation and inventory visibility share it
+	const [isOpen, setIsOpen] = useState(false);
+	const toggle = () => setIsOpen((open) => !open);
+
 	return (
 		<>
 			<div
@@ -27,11 +31,11 @@ const App = () => {
 					pointerEvents: 'none',
 				}}
 			>
-				<Inventory />
+				<Inventory isOpen={isOpen} />
 			</div>
 			<Canvas shadows camera={{ position: [-5, 4, 4], fov: 40 }}>
 				<Suspense fallback={() => <Loader />}>
-					<Model />
+					<Model isOpen={isOpen} onToggle={toggle} />
 				</Suspense>
 				<Lights />
 				<Floor />

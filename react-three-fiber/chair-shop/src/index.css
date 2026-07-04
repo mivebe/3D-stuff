@@ -24,3 +24,17 @@ body {
   color: var(--text);
   font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
+
+button {
+  font-family: inherit;
+}
+
+@keyframes chairBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
