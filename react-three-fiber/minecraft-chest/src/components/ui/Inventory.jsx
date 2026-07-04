@@ -113,7 +113,7 @@ const dividerStyle = {
 	height: 8,
 };
 
-function Inventory() {
+function Inventory({ isOpen }) {
 	const [chest, setChest] = useState(initialChest);
 	const [inv, setInv] = useState(initialInv);
 	const [hotbar, setHotbar] = useState(initialHotbar);
@@ -183,6 +183,9 @@ function Inventory() {
 			return () => window.removeEventListener('mouseup', handleUp);
 		}
 	}, [isDragging]);
+
+	// stays mounted while closed (returns null) so slot contents survive open/close
+	if (!isOpen) return null;
 
 	return (
 		<div style={windowStyle}>
