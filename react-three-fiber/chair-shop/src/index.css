@@ -17,6 +17,9 @@ body,
   margin: 0;
   height: 100%;
   width: 100%;
+  /* full-screen app: scrolling happens inside drei's Scroll element, never the page.
+     hide overflow so nothing (e.g. the off-screen cart drawer) leaks a scrollbar on mobile */
+  overflow: hidden;
 }
 
 body {
@@ -27,6 +30,13 @@ body {
 
 button {
   font-family: inherit;
+}
+
+/* hide the drei ScrollControls scrollbar; nav is wheel/touch + the scroll hint */
+#root ::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 @keyframes chairBob {

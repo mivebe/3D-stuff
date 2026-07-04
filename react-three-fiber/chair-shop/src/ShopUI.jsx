@@ -4,9 +4,9 @@ import { CHAIRS, money } from './chairs'
 // pointerEvents:none so wheel/touch/drag still reach the 3D everywhere except
 // on the actual interactive controls (which opt back in with pointerEvents:auto)
 
-export function Header({ goTo, cartCount, onOpenCart }) {
+export function Header({ goTo, cartCount, onOpenCart, compact }) {
   return (
-    <header style={styles.header}>
+    <header style={{ ...styles.header, ...(compact ? styles.headerCompact : null) }}>
       <button style={{ ...styles.logo, ...styles.click }} onClick={() => goTo(0)}>
         CHAIR.
       </button>
@@ -20,11 +20,12 @@ export function Header({ goTo, cartCount, onOpenCart }) {
   )
 }
 
-// clickable colourway dots, one per chair, that scroll-select and mark the active one
-export function Picker({ active, goTo, narrow }) {
+// clickable colourway dots, one per chair, that scroll-select and mark the active one.
+// desktop only: on mobile the swatches move into the product sheet
+export function Picker({ active, goTo }) {
   const onClosing = active >= CHAIRS.length
   return (
-    <div style={{ ...styles.picker, ...(narrow ? styles.pickerNarrow : null), opacity: onClosing ? 0 : 1 }}>
+    <div style={{ ...styles.picker, opacity: onClosing ? 0 : 1 }}>
       {CHAIRS.map((c, i) => (
         <button
           key={c.id}
@@ -43,16 +44,42 @@ export function Picker({ active, goTo, narrow }) {
   )
 }
 
-export function ProductPanel({ active, onAdd, narrow }) {
+export function ProductPanel({ active, onAdd, onSelect, layout }) {
   const chair = CHAIRS[active]
   if (!chair) return null // hidden on the closing page
+  const compact = layout !== 'desktop' // portrait + landscape share the compact card
   return (
-    <div style={{ ...styles.panel, ...(narrow ? styles.panelNarrow : null) }}>
+    <div
+      style={{
+        ...styles.panel,
+        ...(layout === 'portrait' ? styles.panelPortrait : null),
+        ...(layout === 'landscape' ? styles.panelLandscape : null),
+      }}
+    >
+      {compact && (
+        <div style={styles.panelSwatches}>
+          {CHAIRS.map((c, i) => (
+            <button
+              key={c.id}
+              title={c.colorway}
+              onClick={() => onSelect(i)}
+              style={{
+                ...styles.swatch,
+                ...styles.click,
+                background: c.swatch,
+                transform: i === active ? 'scale(1.3)' : 'scale(1)',
+                borderColor: i === active ? '#fff' : 'rgba(255,255,255,0.5)',
+              }}
+            />
+          ))}
+        </div>
+      )}
       <div style={styles.colorwayTag}>{chair.colorway}</div>
       <div style={styles.panelName}>{chair.name}</div>
       <div style={styles.panelPrice}>{money(chair.price)}</div>
-      <p style={styles.tagline}>{chair.tagline}</p>
-      {!narrow && (
+      {/* landscape is height-starved, so drop the tagline to keep the card short */}
+      {layout !== 'landscape' && <p style={styles.tagline}>{chair.tagline}</p>}
+      {!compact && (
         <dl style={styles.specs}>
           {chair.specs.map(([k, v]) => (
             <div key={k} style={styles.specRow}>
@@ -62,7 +89,10 @@ export function ProductPanel({ active, onAdd, narrow }) {
           ))}
         </dl>
       )}
-      <button style={{ ...styles.addBtn, ...styles.click }} onClick={() => onAdd(chair.id)}>
+      <button
+        style={{ ...styles.addBtn, ...styles.click, ...(layout === 'landscape' ? { marginTop: 12 } : null) }}
+        onClick={() => onAdd(chair.id)}
+      >
         Add to cart - {money(chair.price)}
       </button>
     </div>
@@ -160,6 +190,13 @@ const styles = {
     color: '#fff',
     pointerEvents: 'none',
   },
+  headerCompact: {
+    paddingTop: 12,
+    paddingBottom: 12,
+    // keep clear of a landscape phone's notch/rounded corners
+    paddingLeft: 'max(16px, env(safe-area-inset-left))',
+    paddingRight: 'max(16px, env(safe-area-inset-right))',
+  },
   logo: {
     ...click,
     fontWeight: 800,
@@ -209,13 +246,6 @@ const styles = {
     pointerEvents: 'none',
     transition: 'opacity 0.3s',
   },
-  pickerNarrow: {
-    right: '50%',
-    top: 'auto',
-    bottom: 92,
-    transform: 'translateX(50%)',
-    flexDirection: 'row',
-  },
   swatch: {
     width: 22,
     height: 22,
@@ -235,7 +265,16 @@ const styles = {
     color: '#fff',
     pointerEvents: 'none',
   },
-  panelNarrow: { left: 16, right: 16, bottom: 16, width: 'auto', maxWidth: 'none' },
+  // portrait: full-width bottom sheet
+  panelPortrait: { left: 16, right: 16, bottom: 16, width: 'auto', maxWidth: 'none' },
+  // landscape: compact card pinned bottom-left so it clears the chair on the right
+  panelLandscape: {
+    left: 'max(16px, env(safe-area-inset-left))',
+    bottom: 12,
+    width: 300,
+    maxWidth: '44vw',
+  },
+  panelSwatches: { display: 'flex', gap: 14, marginBottom: 12 },
   colorwayTag: {
     display: 'inline-block',
     fontSize: 11,
@@ -293,7 +332,8 @@ const styles = {
     fontWeight: 600,
     pointerEvents: 'none',
     transition: 'opacity 0.3s',
-    whiteSpace: 'nowrap',
+    maxWidth: '86vw',
+    textAlign: 'center',
   },
   backdrop: {
     position: 'absolute',

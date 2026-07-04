@@ -4,6 +4,7 @@ import { Loader } from '@react-three/drei';
 import Lights from './components/scene/Lights';
 import Floor from './components/scene/Floor';
 import Model from './components/scene/Chest';
+import ChestHint from './components/scene/ChestHint';
 import UserControls from './components/scene/Controls';
 import Inventory from './components/ui/Inventory';
 
@@ -36,6 +37,7 @@ const App = () => {
 			<Canvas shadows camera={{ position: [-5, 4, 4], fov: 40 }}>
 				<Suspense fallback={() => <Loader />}>
 					<Model isOpen={isOpen} onToggle={toggle} />
+					{!isOpen && <ChestHint />}
 				</Suspense>
 				<Lights />
 				<Floor />

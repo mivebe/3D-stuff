@@ -12,7 +12,7 @@ const url = (id) => `${base}chairs/${id}.gltf`
 
 CHAIRS.forEach((c) => useGLTF.preload(url(c.id)))
 
-function Chair({ id, index }) {
+function Chair({ id, index, layout }) {
   const { scene } = useGLTF(url(id))
   const { viewport } = useThree()
   const spin = useRef()
@@ -36,8 +36,14 @@ function Chair({ id, index }) {
     const center = new THREE.Vector3()
     box.getSize(size)
     box.getCenter(center)
-    return { scale: (viewport.height * 0.6) / size.y, center }
-  }, [model, viewport.height])
+    // tub chair is nearly as wide as tall, so clamp to both axes per layout:
+    // portrait favors width, landscape favors height, desktop leaves room for copy
+    const heightFrac = layout === 'portrait' ? 0.4 : layout === 'landscape' ? 0.7 : 0.6
+    const widthFrac = layout === 'portrait' ? 0.82 : layout === 'landscape' ? 0.42 : 0.5
+    const maxHeight = viewport.height * heightFrac
+    const maxWidth = viewport.width * widthFrac
+    return { scale: Math.min(maxHeight / size.y, maxWidth / size.x), center }
+  }, [model, viewport.width, viewport.height, layout])
 
   useFrame((_, delta) => {
     if (spin.current && !dragging.current) spin.current.rotation.y += delta * 0.6
@@ -61,12 +67,15 @@ function Chair({ id, index }) {
     e.target.releasePointerCapture?.(e.pointerId)
   }
 
-  // push the chair off-center to the right so it clears the left-side copy + panel;
-  // proportional to viewport so it holds across widths
-  const shiftX = viewport.width * 0.18
+  // portrait: center it and drop slightly so it sits between the top title and
+  // the bottom product sheet. landscape + desktop: push it right so the left
+  // column (copy up top, product card down low) stays clear.
+  const shiftX = layout === 'portrait' ? 0 : viewport.width * (layout === 'landscape' ? 0.22 : 0.18)
+  const shiftY =
+    layout === 'portrait' ? -viewport.height * 0.04 : layout === 'landscape' ? viewport.height * 0.04 : 0
 
   return (
-    <group position={[shiftX, -index * viewport.height, 0]}>
+    <group position={[shiftX, -index * viewport.height + shiftY, 0]}>
       <group
         ref={spin}
         scale={fit.scale}
@@ -136,15 +145,39 @@ export default function ChairShop() {
   const [cart, setCart] = useState([]) // { id, qty }
   const [cartOpen, setCartOpen] = useState(false)
   const [toast, setToast] = useState('')
-  const [narrow, setNarrow] = useState(false)
+  const [layout, setLayout] = useState('desktop') // 'desktop' | 'portrait' | 'landscape'
+  const [resizeEpoch, setResizeEpoch] = useState(0) // bumps on settled resize to remount the Canvas
   const toastTimer = useRef()
 
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 720px)')
-    const sync = () => setNarrow(mq.matches)
+    let timer
+    const bump = () => {
+      clearTimeout(timer)
+      timer = setTimeout(() => setResizeEpoch((e) => e + 1), 250)
+    }
+    window.addEventListener('resize', bump)
+    window.addEventListener('orientationchange', bump)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', bump)
+      window.removeEventListener('orientationchange', bump)
+    }
+  }, [])
+
+  // portrait phones get the stacked layout; short landscape screens (phones on
+  // their side, tiny windows) get a compact two-column one; roomy stays desktop
+  useEffect(() => {
+    const portrait = window.matchMedia('(max-width: 720px) and (orientation: portrait)')
+    const landscape = window.matchMedia('(max-height: 600px) and (orientation: landscape)')
+    const sync = () =>
+      setLayout(portrait.matches ? 'portrait' : landscape.matches ? 'landscape' : 'desktop')
     sync()
-    mq.addEventListener('change', sync)
-    return () => mq.removeEventListener('change', sync)
+    portrait.addEventListener('change', sync)
+    landscape.addEventListener('change', sync)
+    return () => {
+      portrait.removeEventListener('change', sync)
+      landscape.removeEventListener('change', sync)
+    }
   }, [])
 
   const goTo = useCallback((index) => {
@@ -202,8 +235,25 @@ export default function ChairShop() {
   const onClosing = active >= CHAIRS.length
 
   return (
-    <div ref={containerRef} style={{ position: 'absolute', inset: 0, background: CHAIRS[0].bg }}>
-      <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
+    <div
+      ref={containerRef}
+      style={{
+        // fixed + dynamic-viewport units track the visible mobile viewport (toolbar
+        // show/hide, rotation); absolute+inset+height:100% left black gaps
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100dvw',
+        height: '100dvh',
+        overflow: 'hidden',
+        background: CHAIRS[0].bg,
+      }}
+    >
+      {/* remount on every settled resize: drei ScrollControls doesn't recompute
+          its scroll geometry on resize, so the chair ends up mis-scaled or off
+          -screen until a reload. a debounced key forces a clean re-init (gltf is
+          preloaded, so it's instant); debounce keeps it from thrashing mid-drag */}
+      <Canvas key={resizeEpoch} camera={{ position: [0, 0, 6], fov: 45 }}>
         <Lights />
         <ScrollControls pages={PAGES} damping={0.25}>
           <Background targetRef={containerRef} />
@@ -212,7 +262,7 @@ export default function ChairShop() {
           <Scroll>
             {CHAIRS.map((c, i) => (
               <Suspense key={c.id} fallback={null}>
-                <Chair id={c.id} index={i} />
+                <Chair id={c.id} index={i} layout={layout} />
               </Suspense>
             ))}
           </Scroll>
@@ -220,16 +270,43 @@ export default function ChairShop() {
           {/* section copy scrolls with the page; renders immediately (not gated on the model) */}
           <Scroll html style={{ width: '100%' }}>
             {CHAIRS.map((c, i) => (
-              <div key={c.id} style={{ ...sectionStyle, top: `${i * 100 + 16}vh` }}>
+              <div
+                key={c.id}
+                style={{
+                  ...sectionStyle,
+                  top: `${i * 100 + (layout === 'landscape' ? 18 : 16)}vh`,
+                  left:
+                    layout === 'portrait'
+                      ? '6vw'
+                      : layout === 'landscape'
+                        ? 'max(5vw, env(safe-area-inset-left))'
+                        : '8vw',
+                  maxWidth: layout === 'portrait' ? '80vw' : layout === 'landscape' ? '46vw' : '42vw',
+                }}
+              >
                 {c.title.map((line, li) => (
-                  <h1 key={li} style={titleStyle}>
+                  <h1
+                    key={li}
+                    style={
+                      layout === 'landscape'
+                        ? { ...titleStyle, fontSize: 'clamp(20px, 3.6vw, 34px)' }
+                        : titleStyle
+                    }
+                  >
                     {line}
                   </h1>
                 ))}
               </div>
             ))}
             <div style={{ ...closingStyle, top: `${(PAGES - 1) * 100}vh` }}>
-              <h1 style={{ ...titleStyle, fontSize: 'clamp(32px, 5vw, 72px)' }}>{CLOSING.heading}</h1>
+              <h1
+                style={{
+                  ...titleStyle,
+                  fontSize: layout === 'landscape' ? 'clamp(26px, 5vw, 44px)' : 'clamp(32px, 5vw, 72px)',
+                }}
+              >
+                {CLOSING.heading}
+              </h1>
               <p style={closingSub}>{CLOSING.sub}</p>
               <button style={closingBtn} onClick={() => setCartOpen(true)}>
                 {cartCount > 0 ? `Review order (${cartCount})` : 'Start your order'}
@@ -239,10 +316,18 @@ export default function ChairShop() {
         </ScrollControls>
       </Canvas>
 
-      <Header goTo={goTo} cartCount={cartCount} onOpenCart={() => setCartOpen(true)} />
-      <Picker active={active} goTo={goTo} narrow={narrow} />
-      {!onClosing && <ProductPanel active={active} onAdd={addToCart} narrow={narrow} />}
-      <ScrollHint visible={!scrolled} />
+      <Header
+        goTo={goTo}
+        cartCount={cartCount}
+        onOpenCart={() => setCartOpen(true)}
+        compact={layout !== 'desktop'}
+      />
+      {/* desktop shows the swatches as a side rail; on smaller screens they live
+          inside the product card so they never collide with the copy */}
+      {layout === 'desktop' && <Picker active={active} goTo={goTo} />}
+      {!onClosing && <ProductPanel active={active} onAdd={addToCart} onSelect={goTo} layout={layout} />}
+      {/* portrait's full-width bottom sheet would sit under the hint, so skip it there */}
+      <ScrollHint visible={!scrolled && layout !== 'portrait'} />
       <Toast text={toast} />
       <CartDrawer
         open={cartOpen}

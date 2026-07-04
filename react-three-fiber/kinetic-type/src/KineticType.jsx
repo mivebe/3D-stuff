@@ -92,9 +92,8 @@ function KineticMesh({ text, geometry, scrollSpeed, spin, repeat, ripple, color 
   const texture = useMemo(() => makeTextTexture(text), [text])
   useEffect(() => () => texture.dispose(), [texture])
 
-  // write live values straight into the material's own uniforms each frame.
-  // reassigning a uniform.value on the memoized object did not reach the GPU
-  // (the material reads a different holder), so go through the material ref.
+  // write live values into the material's own uniforms each frame; reassigning
+  // uniform.value on the memoized object never reached the GPU (different holder)
   const live = useRef({})
   live.current = { scrollSpeed, spin, repeat, ripple, color, texture }
 

@@ -3,11 +3,9 @@ import { useGLTF } from '@react-three/drei'
 import { clone as skeletonClone } from 'three/examples/jsm/utils/SkeletonUtils.js'
 import * as THREE from 'three'
 
-// shared model loader. wraps drei's cached useGLTF and returns a fresh
-// skeleton-aware clone so the same gltf can back multiple instances safely.
-// reports a fit transform (scale + foot offset) normalizing the model to a
-// target height with feet on the ground, and can strip baked root motion so
-// code-driven locomotion does not fight the animation.
+// shared model loader. clones drei's cached useGLTF (skeleton-aware) so one gltf
+// backs many instances, reports a fit transform (scale + foot offset) to a target
+// height, and can strip baked root motion so code drives locomotion.
 export function useModel(url, options = {}) {
   const { targetHeight = 1.8, inPlace = false } = options
   const gltf = useGLTF(url)
@@ -26,10 +24,9 @@ export function useModel(url, options = {}) {
 
   const { fit, rootName } = useMemo(() => {
     scene.updateMatrixWorld(true)
-    // skinned meshes render from bone transforms, not the bind-pose geometry
-    // box (which here is rotated 90deg and scaled by a baked root node, so its
-    // y-extent is actually the model's depth). measure from bone world
-    // positions instead to get the true upright height.
+    // skinned meshes render from bone transforms, not the bind-pose box (here
+    // rotated 90deg by a baked root, so its y-extent is really depth). measure
+    // from bone world positions to get true upright height.
     let skinned = null
     scene.traverse((o) => {
       if (!skinned && o.isSkinnedMesh) skinned = o
@@ -51,11 +48,9 @@ export function useModel(url, options = {}) {
 
   const animations = useMemo(() => {
     if (!inPlace) return gltf.animations
-    // strip baked root motion so code-driven locomotion does not fight it.
-    // the locomotion axis is whichever component of the root translation moves
-    // monotonically (net displacement ~ full range); lock it to frame 0 and
-    // leave oscillatory sway + vertical bob alone. axis-agnostic, so it works
-    // regardless of any rotation baked into the model's root node.
+    // strip baked root motion so code drives locomotion. the locomotion axis is
+    // whichever root-translation component moves monotonically (net ~ full range);
+    // lock it to frame 0, leave oscillatory sway + bob alone. axis-agnostic.
     return gltf.animations.map((clip) => {
       const c = clip.clone()
       for (const track of c.tracks) {

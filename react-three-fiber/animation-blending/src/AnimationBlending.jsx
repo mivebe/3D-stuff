@@ -20,10 +20,9 @@ function Model({ base, weights, speed }) {
   const group = useRef()
   const { scene, animations, fit } = useModel(MODEL_URL, { targetHeight: 1.8 })
 
-  // convert the pose clips to additive so they layer on top of locomotion.
-  // drop position tracks first so the poses only overlay joint rotations -
-  // otherwise the root's additive translation delta snaps the figure around
-  // every time the clip loops.
+  // convert pose clips to additive so they layer over locomotion. drop position
+  // tracks first so poses overlay only rotations, else the root's translation
+  // delta snaps the figure on every loop
   const clips = useMemo(() => {
     const additiveNames = new Set(ADDITIVE.map((a) => a.name))
     return animations.map((clip) => {

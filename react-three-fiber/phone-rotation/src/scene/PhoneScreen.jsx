@@ -1,30 +1,13 @@
 import { Html } from '@react-three/drei'
-import { screen } from '../data/product.js'
+import { screen, finishes } from '../data/product.js'
 import './screen.css'
 
 const SCREEN_SCALE = 0.34
-const HOME_APPS = [
-  ['#e6c079', '#8a6a2f'],
-  ['#6ea8ff', '#2f5aa8'],
-  ['#5fd39b', '#2f7d55'],
-  ['#f0849e', '#8a3350'],
-  ['#c58cf0', '#5f2f8a'],
-  ['#f0a25f', '#8a4f2f'],
-  ['#5fd3d3', '#2f7d7d'],
-  ['#aeb4c0', '#5a606c'],
-  ['#8a90f0', '#3a3f8a'],
-  ['#f0d15f', '#8a742f'],
-  ['#7de07d', '#2f8a3f'],
-  ['#f07d7d', '#8a2f2f'],
-  ['#5fb0f0', '#2f5f8a'],
-  ['#d0d4da', '#7a7f88'],
-  ['#e69ac0', '#8a3f68'],
-  ['#9ae6cf', '#2f8a6f'],
-  ['#e6c079', '#8a6a2f'],
-  ['#6ea8ff', '#2f5aa8'],
-  ['#f0849e', '#8a3350'],
-  ['#5fd39b', '#2f7d55'],
-]
+// icons cycle through the three phone finishes so the home screen stays on-brand
+const HOME_APPS = Array.from({ length: 20 }, (_, i) => {
+  const finish = finishes[i % finishes.length]
+  return [finish.swatch, finish.color]
+})
 
 const iconStyle = ([top, bottom]) => ({
   background: `linear-gradient(145deg, ${top}, ${bottom})`,

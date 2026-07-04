@@ -4,13 +4,9 @@ import App from '../App.js';
 
 const EYE_HEIGHT = 1.6;
 
-// the apartment is assembled in resources/cad-source/apartment-assembled.blend: a real
-// Walls shell plus every room (LivingRoom, Hallway, Kitchen, Bathroom, Balcony, Bedroom)
-// positioned in one world space. each collection is exported to its own glb with world
-// transforms baked in, so all the glbs load at identity and reassemble into that same
-// layout. that retires the old code-side joining, procedural envelopes and Shell - this
-// file now just adds the rooms, wires interaction onto the named objects, and builds
-// colliders straight off the real geometry.
+// rooms come from apartment-assembled.blend, one world-baked glb per collection, so
+// they load at identity and reassemble. this file just adds them, wires interaction
+// onto the named objects, and builds colliders off the real geometry.
 
 // load + collider order; Walls first so the shell is in before furniture
 const ROOMS = ['walls', 'livingRoom', 'hallway', 'kitchen', 'bedroom', 'bathroom', 'balcony'];
@@ -239,11 +235,9 @@ export default class Room {
     });
   }
 
-  // one AABB per mesh that overlaps the player's vertical span, so you can still walk
-  // under upper cabinets. floors/ceilings, door frames, and the door leaves/panels are
-  // skipped so they never seal a walkway. the shell walls have door holes cut in the blend,
-  // so their AABBs are split around each doorway (carving is a runtime collision concern,
-  // not a model one) - everything else is a single AABB.
+  // one AABB per mesh overlapping the player's vertical span, so you walk under upper
+  // cabinets. floors/ceilings, frames and door leaves are skipped so nothing seals a
+  // walkway; shell walls split their AABB around each doorway hole, else it's one box.
   setColliders() {
     const feet = this.floorY + 0.1;
     const head = this.floorY + 1.7;
