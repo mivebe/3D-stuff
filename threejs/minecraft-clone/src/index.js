@@ -12,7 +12,8 @@ import { loadPlayerState, savePlayerState } from './world/persistence';
 // css custom property. a relative url() inside a custom property resolves against
 // the stylesheet that consumes it (the hashed assets/index-*.css), not the
 // document, so a bare "./textures/..." 404s under a subpath (dashboard iframe).
-const widgetsUrl = new URL(`${import.meta.env.BASE_URL}textures/gui/widgets.png`, document.baseURI).href;
+const widgetsUrl = new URL(`${import.meta.env.BASE_URL}textures/gui/widgets.png`, document.baseURI)
+  .href;
 document.documentElement.style.setProperty('--widgets-url', `url("${widgetsUrl}")`);
 
 const renderer = new THREE.WebGLRenderer();

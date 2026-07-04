@@ -1,5 +1,5 @@
-import * as THREE from 'three';
-import App from '../App.js';
+import * as THREE from "three";
+import App from "../App.js";
 
 const REACH = 3;
 
@@ -13,17 +13,17 @@ export default class Interaction {
 
     this.raycaster = new THREE.Raycaster();
     this.center = new THREE.Vector2(0, 0);
-    this.prompt = document.querySelector('.prompt');
+    this.prompt = document.querySelector(".prompt");
     this.target = null;
 
     this.bindEvents();
   }
 
   bindEvents() {
-    window.addEventListener('keydown', (e) => {
-      if (e.code === 'KeyE') this.trigger();
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "KeyE") this.trigger();
     });
-    this.experience.canvas.addEventListener('mousedown', () => {
+    this.experience.canvas.addEventListener("mousedown", () => {
       if (this.player.locked && this.target) this.trigger();
     });
   }
@@ -40,7 +40,10 @@ export default class Interaction {
       return;
     }
     this.raycaster.setFromCamera(this.center, this.camera);
-    const hits = this.raycaster.intersectObjects(this.room.interactiveMeshes, false);
+    const hits = this.raycaster.intersectObjects(
+      this.room.interactiveMeshes,
+      false,
+    );
     const hit = hits.find((h) => h.distance <= REACH);
     this.setTarget(hit ? hit.object : null);
   }
@@ -50,11 +53,11 @@ export default class Interaction {
     if (!this.prompt) return;
     if (object) {
       const it = object.userData.interactive;
-      const label = typeof it.prompt === 'function' ? it.prompt() : it.prompt;
+      const label = typeof it.prompt === "function" ? it.prompt() : it.prompt;
       this.prompt.textContent = `E   ${label}`;
-      this.prompt.classList.remove('hidden');
+      this.prompt.classList.remove("hidden");
     } else {
-      this.prompt.classList.add('hidden');
+      this.prompt.classList.add("hidden");
     }
   }
 }

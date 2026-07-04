@@ -58,7 +58,9 @@
   transform: translateY(calc(-50% + 24px));
   max-width: 440px;
   opacity: 0;
-  transition: opacity 1s var(--ease), transform 1s var(--ease);
+  transition:
+    opacity 1s var(--ease),
+    transform 1s var(--ease);
 }
 .hero__copy.is-in {
   opacity: 1;
@@ -130,7 +132,7 @@
   transition: transform 0.3s var(--ease);
 }
 .swatch::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: -5px;
   border-radius: 50%;
@@ -170,7 +172,9 @@
 .reveal {
   opacity: 0;
   transform: translateY(26px);
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  transition:
+    opacity 0.9s var(--ease),
+    transform 0.9s var(--ease);
 }
 .reveal.is-in {
   opacity: 1;
@@ -194,7 +198,9 @@
   background: var(--bg-elev);
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.4s var(--ease), transform 0.4s var(--ease);
+  transition:
+    border-color 0.4s var(--ease),
+    transform 0.4s var(--ease);
 }
 .finishCard:hover {
   transform: translateY(-4px);

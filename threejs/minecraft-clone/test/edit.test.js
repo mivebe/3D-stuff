@@ -14,8 +14,7 @@ const wipe = (w) => {
 };
 const cube = (w, lo, hi, id) => {
   for (let x = lo; x <= hi; x++)
-    for (let y = lo; y <= hi; y++)
-      for (let z = lo; z <= hi; z++) w.setBlockId({ x, y, z }, id);
+    for (let y = lo; y <= hi; y++) for (let z = lo; z <= hi; z++) w.setBlockId({ x, y, z }, id);
 };
 const make = () => {
   const w = new World(8, 8, undefined, false);

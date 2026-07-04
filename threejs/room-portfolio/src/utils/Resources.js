@@ -25,7 +25,9 @@ export default class Resources extends EventEmitter {
     this.loaders = {};
     this.loaders.gltfLoader = new GLTFLoader();
     this.loaders.dracoLoader = new DRACOLoader();
-    this.loaders.dracoLoader.setDecoderPath(`${import.meta.env.BASE_URL}draco/`);
+    this.loaders.dracoLoader.setDecoderPath(
+      `${import.meta.env.BASE_URL}draco/`,
+    );
     this.loaders.gltfLoader.setDRACOLoader(this.loaders.dracoLoader);
   }
 
@@ -48,7 +50,7 @@ export default class Resources extends EventEmitter {
         this.video[asset.name].play();
 
         this.videoTexture[asset.name] = new THREE.VideoTexture(
-          this.video[asset.name]
+          this.video[asset.name],
         );
         // this.videoTexture[asset.name].flipY = false;
         this.videoTexture[asset.name].minFilter = THREE.NearestFilter;

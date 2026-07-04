@@ -4,7 +4,6 @@ import ASScroll from "@ashthornton/asscroll";
 
 export default class Controls {
   constructor() {
-
     this.experience = new App();
     this.scene = this.experience.scene;
     this.sizes = this.experience.sizes;
@@ -12,7 +11,7 @@ export default class Controls {
     this.time = this.experience.time;
     this.camera = this.experience.camera;
     this.room = this.experience.world.room.actualRoom;
-    this.room.children.forEach(child => {
+    this.room.children.forEach((child) => {
       if (child.type === "RectAreaLight") {
         this.rectLight = child;
       }
@@ -25,7 +24,11 @@ export default class Controls {
 
     document.querySelector(".page").style.overflow = "visible";
 
-    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (
+      !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      )
+    ) {
       this.setSmoothScroll();
     }
 
@@ -70,7 +73,7 @@ export default class Controls {
     requestAnimationFrame(() => {
       asscroll.enable({
         newScrollElements: document.querySelectorAll(
-          ".gsap-marker-start, .gsap-marker-end, [asscroll]"
+          ".gsap-marker-start, .gsap-marker-end, [asscroll]",
         ),
       });
     });
@@ -104,7 +107,11 @@ export default class Controls {
             invalidateOnRefresh: true,
           },
         });
-        this.firstMoveTimeline.fromTo(this.room.position, { x: 0, y: 0, z: 0 }, { x: () => this.sizes.width * 0.0014 });
+        this.firstMoveTimeline.fromTo(
+          this.room.position,
+          { x: 0, y: 0, z: 0 },
+          { x: () => this.sizes.width * 0.0014 },
+        );
 
         // Second section -----------------------------------------
         this.secondMoveTimeline = new gsap.timeline({
@@ -116,9 +123,13 @@ export default class Controls {
             invalidateOnRefresh: true,
           },
         })
-          .to(this.room.position, { x: 1, z: () => this.sizes.height * 0.0032, }, "same")
-          .to(this.room.scale, { x: 0.4, y: 0.4, z: 0.4, }, "same")
-          .to(this.rectLight, { width: 0.5 * 4, height: 0.7 * 4, }, "same");
+          .to(
+            this.room.position,
+            { x: 1, z: () => this.sizes.height * 0.0032 },
+            "same",
+          )
+          .to(this.room.scale, { x: 0.4, y: 0.4, z: 0.4 }, "same")
+          .to(this.rectLight, { width: 0.5 * 4, height: 0.7 * 4 }, "same");
 
         // Third section -----------------------------------------
         this.thirdMoveTimeline = new gsap.timeline({
@@ -129,8 +140,7 @@ export default class Controls {
             scrub: 0.6,
             invalidateOnRefresh: true,
           },
-        })
-          .to(this.camera.orthographicCamera.position, { y: 1.5, x: -4.1, });
+        }).to(this.camera.orthographicCamera.position, { y: 1.5, x: -4.1 });
       },
 
       // Mobile
@@ -153,8 +163,7 @@ export default class Controls {
             scrub: 0.6,
             // invalidateOnRefresh: true,
           },
-        })
-          .to(this.room.scale, { x: 0.1, y: 0.1, z: 0.1, });
+        }).to(this.room.scale, { x: 0.1, y: 0.1, z: 0.1 });
 
         // Second section -----------------------------------------
         this.secondMoveTimeline = new gsap.timeline({
@@ -166,9 +175,9 @@ export default class Controls {
             invalidateOnRefresh: true,
           },
         })
-          .to(this.room.scale, { x: 0.25, y: 0.25, z: 0.25, }, "same")
-          .to(this.rectLight, { width: 0.3 * 3.4, height: 0.4 * 3.4, }, "same")
-          .to(this.room.position, { x: 1.5, }, "same");
+          .to(this.room.scale, { x: 0.25, y: 0.25, z: 0.25 }, "same")
+          .to(this.rectLight, { width: 0.3 * 3.4, height: 0.4 * 3.4 }, "same")
+          .to(this.room.position, { x: 1.5 }, "same");
 
         // Third section -----------------------------------------
         this.thirdMoveTimeline = new gsap.timeline({
@@ -179,16 +188,14 @@ export default class Controls {
             scrub: 0.6,
             invalidateOnRefresh: true,
           },
-        })
-          .to(this.room.position, { z: -4.5 });
+        }).to(this.room.position, { z: -4.5 });
       },
 
       // all
       all: () => {
         this.sections = document.querySelectorAll(".section");
-        this.sections.forEach(section => {
-          this.progressWrapper =
-            section.querySelector(".progress-wrapper");
+        this.sections.forEach((section) => {
+          this.progressWrapper = section.querySelector(".progress-wrapper");
           this.progressBar = section.querySelector(".progress-bar");
 
           if (section.classList.contains("right")) {
@@ -253,8 +260,7 @@ export default class Controls {
             end: "bottom bottom",
             scrub: 0.6,
           },
-        })
-          .to(this.circleFirst.scale, { x: 3, y: 3, z: 3 });
+        }).to(this.circleFirst.scale, { x: 3, y: 3, z: 3 });
 
         // Second section -----------------------------------------
         this.secondCircle = new gsap.timeline({
@@ -276,8 +282,7 @@ export default class Controls {
             end: "bottom bottom",
             scrub: 0.6,
           },
-        })
-          .to(this.circleThird.scale, { x: 3, y: 3, z: 3 });
+        }).to(this.circleThird.scale, { x: 3, y: 3, z: 3 });
 
         // Mini Platform Animations
         this.secondPartTimeline = new gsap.timeline({
@@ -289,7 +294,11 @@ export default class Controls {
 
         this.room.children.forEach((child) => {
           if (child.name === "Mini_Floor") {
-            this.first = gsap.to(child.position, { x: -5.44055, z: 13.6135, duration: 0.3 });
+            this.first = gsap.to(child.position, {
+              x: -5.44055,
+              z: 13.6135,
+              duration: 0.3,
+            });
           }
 
           if (child.name === "Mailbox") {
@@ -369,7 +378,6 @@ export default class Controls {
               duration: 0.3,
             });
           }
-
         });
 
         this.secondPartTimeline.add(this.first);
@@ -385,7 +393,7 @@ export default class Controls {
     });
   }
 
-  resize() { }
+  resize() {}
 
-  update() { }
+  update() {}
 }

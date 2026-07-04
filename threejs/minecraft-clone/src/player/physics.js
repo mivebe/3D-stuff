@@ -26,7 +26,11 @@ const EPS = 1e-6;
 /** Collision AABB for the player, with feet at `pos` (footprint centered on x/z). */
 export const playerBox = (pos) => ({
   min: { x: pos.x - COLLISION_SIZE.x / 2, y: pos.y, z: pos.z - COLLISION_SIZE.z / 2 },
-  max: { x: pos.x + COLLISION_SIZE.x / 2, y: pos.y + COLLISION_SIZE.y, z: pos.z + COLLISION_SIZE.z / 2 },
+  max: {
+    x: pos.x + COLLISION_SIZE.x / 2,
+    y: pos.y + COLLISION_SIZE.y,
+    z: pos.z + COLLISION_SIZE.z / 2,
+  },
 });
 
 // Inclusive integer cell indices whose [c, c+1) span overlaps [lo, hi).
@@ -97,8 +101,7 @@ export const stepPhysics = (state, dt, isSolid, { fly = false } = {}) => {
 
   velocity.y = Math.max(velocity.y - GRAVITY * dt, -TERMINAL_VELOCITY);
 
-  const maxDisp =
-    Math.max(Math.abs(velocity.x), Math.abs(velocity.y), Math.abs(velocity.z)) * dt;
+  const maxDisp = Math.max(Math.abs(velocity.x), Math.abs(velocity.y), Math.abs(velocity.z)) * dt;
   const steps = Math.max(1, Math.ceil(maxDisp / MAX_SUBSTEP));
   const sdt = dt / steps;
 

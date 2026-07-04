@@ -1,23 +1,29 @@
-import { brand, closing } from '../data/product.js'
-import { useInView } from './useInView.js'
+import { brand, closing } from "../data/product.js";
+import { useInView } from "./useInView.js";
 
-const base = import.meta.env.BASE_URL
+const base = import.meta.env.BASE_URL;
 
 // captured from the 3D scene (see scripts/capture-shots) so the stills match
 // the live model, finish and lighting
 const shots = [
-  { id: 'graphite', caption: 'Grade-5 titanium, bead-blasted to a soft sheen.' },
-  { id: 'champagne', caption: 'A finish that catches the warmth of the room.' },
-  { id: 'midnight', caption: 'A 6.9" crystal display that disappears into glass.' },
-]
+  {
+    id: "graphite",
+    caption: "Grade-5 titanium, bead-blasted to a soft sheen.",
+  },
+  { id: "champagne", caption: "A finish that catches the warmth of the room." },
+  {
+    id: "midnight",
+    caption: 'A 6.9" crystal display that disappears into glass.',
+  },
+];
 
-function Reveal({ className = '', children }) {
-  const [ref, inView] = useInView()
+function Reveal({ className = "", children }) {
+  const [ref, inView] = useInView();
   return (
-    <div ref={ref} className={`reveal ${inView ? 'is-in' : ''} ${className}`}>
+    <div ref={ref} className={`reveal ${inView ? "is-in" : ""} ${className}`}>
       {children}
     </div>
-  )
+  );
 }
 
 function Finishes({ finishes, finish, onFinish }) {
@@ -32,20 +38,23 @@ function Finishes({ finishes, finish, onFinish }) {
           <Reveal key={f.id}>
             <button
               type="button"
-              className={`finishCard ${f.id === finish.id ? 'is-active' : ''}`}
+              className={`finishCard ${f.id === finish.id ? "is-active" : ""}`}
               onClick={() => onFinish(f)}
             >
-              <span className="finishCard__chip" style={{ background: f.swatch }} />
+              <span
+                className="finishCard__chip"
+                style={{ background: f.swatch }}
+              />
               <span className="finishCard__name">{f.label}</span>
               <span className="finishCard__hint">
-                {f.id === finish.id ? 'On the phone now' : 'See it live'}
+                {f.id === finish.id ? "On the phone now" : "See it live"}
               </span>
             </button>
           </Reveal>
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 function Details() {
@@ -67,7 +76,7 @@ function Details() {
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 function Closing() {
@@ -79,7 +88,7 @@ function Closing() {
         <p className="closing__sub">{closing.sub}</p>
       </Reveal>
     </section>
-  )
+  );
 }
 
 export default function Sections({ finish, finishes, onFinish }) {
@@ -89,5 +98,5 @@ export default function Sections({ finish, finishes, onFinish }) {
       <Details />
       <Closing />
     </main>
-  )
+  );
 }

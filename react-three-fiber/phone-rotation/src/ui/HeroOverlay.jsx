@@ -1,4 +1,4 @@
-import { brand, heroMessage, specs } from '../data/product.js'
+import { brand, heroMessage, specs } from "../data/product.js";
 
 function FinishSwitcher({ finishes, finish, onFinish }) {
   return (
@@ -9,8 +9,8 @@ function FinishSwitcher({ finishes, finish, onFinish }) {
           <button
             key={f.id}
             type="button"
-            className={`swatch ${f.id === finish.id ? 'is-active' : ''}`}
-            style={{ '--swatch': f.swatch }}
+            className={`swatch ${f.id === finish.id ? "is-active" : ""}`}
+            style={{ "--swatch": f.swatch }}
             aria-label={f.label}
             aria-pressed={f.id === finish.id}
             onClick={() => onFinish(f)}
@@ -18,14 +18,20 @@ function FinishSwitcher({ finishes, finish, onFinish }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default function HeroOverlay({ phase, finish, finishes, onFinish, mobile }) {
-  const copyVisible = phase >= 3
+export default function HeroOverlay({
+  phase,
+  finish,
+  finishes,
+  onFinish,
+  mobile,
+}) {
+  const copyVisible = phase >= 3;
 
   return (
-    <header className={`hero ${mobile ? 'hero--mobile' : ''}`}>
+    <header className={`hero ${mobile ? "hero--mobile" : ""}`}>
       <nav className="nav">
         <div className="nav__brand">{brand.name}</div>
         <div className="nav__links">
@@ -35,7 +41,7 @@ export default function HeroOverlay({ phase, finish, finishes, onFinish, mobile 
         </div>
       </nav>
 
-      <div className={`hero__copy ${copyVisible ? 'is-in' : ''}`}>
+      <div className={`hero__copy ${copyVisible ? "is-in" : ""}`}>
         <p className="eyeline">{heroMessage.eyeline}</p>
         <h1 className="hero__headline">
           {heroMessage.headline.map((line) => (
@@ -53,8 +59,12 @@ export default function HeroOverlay({ phase, finish, finishes, onFinish, mobile 
           ))}
         </dl>
 
-        <FinishSwitcher finishes={finishes} finish={finish} onFinish={onFinish} />
+        <FinishSwitcher
+          finishes={finishes}
+          finish={finish}
+          onFinish={onFinish}
+        />
       </div>
     </header>
-  )
+  );
 }

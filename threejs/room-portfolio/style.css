@@ -10,7 +10,11 @@ body {
   height: 100%;
   overflow: hidden;
   background: #0c0a08;
-  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 #canvas {

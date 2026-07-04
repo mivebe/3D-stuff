@@ -1,4 +1,4 @@
-export const covertDivsToSpans = element => {
+export const covertDivsToSpans = (element) => {
   element.style.overflow = "hidden";
   element.innerHTML = element.innerText
     .split("")
@@ -11,4 +11,4 @@ export const covertDivsToSpans = element => {
     .join("");
 
   return element;
-}
+};

@@ -1,34 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Room Portfolio - Living Room</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Room Portfolio - Living Room</title>
-</head>
+  <body>
+    <canvas id="canvas"></canvas>
 
-<body>
-  <canvas id="canvas"></canvas>
+    <div class="ui">
+      <div class="crosshair"></div>
+      <div class="prompt hidden"></div>
+      <div class="hint hidden">
+        WASD move &middot; mouse look &middot; E interact &middot; Esc release
+      </div>
+      <div class="loading">loading...</div>
+      <div class="start hidden">
+        <button type="button">click to enter</button>
+      </div>
 
-  <div class="ui">
-    <div class="crosshair"></div>
-    <div class="prompt hidden"></div>
-    <div class="hint hidden">WASD move &middot; mouse look &middot; E interact &middot; Esc release</div>
-    <div class="loading">loading...</div>
-    <div class="start hidden">
-      <button type="button">click to enter</button>
-    </div>
-
-    <div class="panel hidden">
-      <div class="panel-card">
-        <button type="button" class="panel-close">close</button>
-        <h2 class="panel-title"></h2>
-        <div class="panel-body"></div>
+      <div class="panel hidden">
+        <div class="panel-card">
+          <button type="button" class="panel-close">close</button>
+          <h2 class="panel-title"></h2>
+          <div class="panel-body"></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script type="module" src="/main.js"></script>
-</body>
-
+    <script type="module" src="/main.js"></script>
+  </body>
 </html>

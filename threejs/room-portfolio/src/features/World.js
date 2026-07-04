@@ -1,8 +1,8 @@
-import { EventEmitter } from 'events';
-import App from '../App.js';
+import { EventEmitter } from "events";
+import App from "../App.js";
 
-import Environment from './Environment.js';
-import Room from './Room.js';
+import Environment from "./Environment.js";
+import Room from "./Room.js";
 
 export default class World extends EventEmitter {
   constructor() {
@@ -12,10 +12,10 @@ export default class World extends EventEmitter {
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
 
-    this.resources.on('ready', () => {
+    this.resources.on("ready", () => {
       this.environment = new Environment();
       this.room = new Room();
-      this.emit('worldready');
+      this.emit("worldready");
     });
   }
 

@@ -53,7 +53,12 @@ export default class ChunkManager extends THREE.Group {
     this.add(chunk);
     this._refreshNeighbourBorders(cx, cz);
     // Existing neighbours rebuild their water so the shared border faces re-cull.
-    for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+    for (const [dx, dz] of [
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1],
+    ]) {
       this.chunk(cx + dx, cz + dz)?.rebuildWaterMesh();
     }
     return chunk;

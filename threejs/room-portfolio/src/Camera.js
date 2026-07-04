@@ -1,5 +1,5 @@
-import * as THREE from 'three';
-import App from './App.js';
+import * as THREE from "three";
+import App from "./App.js";
 
 // first-person camera; the Player controller drives position and orientation
 export default class Camera {
@@ -8,7 +8,12 @@ export default class Camera {
     this.sizes = this.experience.sizes;
     this.scene = this.experience.scene;
 
-    this.instance = new THREE.PerspectiveCamera(60, this.sizes.aspect, 0.1, 100);
+    this.instance = new THREE.PerspectiveCamera(
+      60,
+      this.sizes.aspect,
+      0.1,
+      100,
+    );
     this.instance.position.set(0, 1.6, 1.5);
     this.scene.add(this.instance);
   }

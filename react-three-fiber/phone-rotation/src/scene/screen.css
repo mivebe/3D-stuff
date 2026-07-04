@@ -20,7 +20,12 @@
   padding: 16px 16px 14px;
   display: flex;
   flex-direction: column;
-  background: radial-gradient(95% 60% at 50% 0%, #23252f 0%, #0d0e13 68%, #070709 100%);
+  background: radial-gradient(
+    95% 60% at 50% 0%,
+    #23252f 0%,
+    #0d0e13 68%,
+    #070709 100%
+  );
 }
 /* fades away as the app grows over it */
 .screen--launched .home {
@@ -114,7 +119,12 @@
   padding: 22px 18px;
   border-radius: 30px;
   overflow: hidden;
-  background: radial-gradient(120% 80% at 50% 0%, #15161c 0%, #060608 60%, #030304 100%);
+  background: radial-gradient(
+    120% 80% at 50% 0%,
+    #15161c 0%,
+    #060608 60%,
+    #030304 100%
+  );
   transform-origin: 0% 100%;
   animation: appOpen 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }

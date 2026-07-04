@@ -23,8 +23,8 @@ shell from the blend.
 
 - [ ] No real lights in the blend yet; the kitchen reads only off Environment.js. Add real
       under-cabinet / ceiling lights as Blender light objects (the source has led-strip notes
-      in resources/cad-source/kitchen/old led_*). (Blender + code tuning)
-- [ ] Cabinet doors (moduleL_door_*, module-*_door_*, drawer faces) are static. The blend
+      in resources/cad-source/kitchen/old led\_\*). (Blender + code tuning)
+- [ ] Cabinet doors (moduleL*door*_, module-__door_\*, drawer faces) are static. The blend
       kept their names; hinge a few as openable like the living-room cabinets
       (Room.registerDoor) if wanted. (code)
 - [ ] Appliance interactivity (cooktop glow, open the oven) if we want hotspots. (code)

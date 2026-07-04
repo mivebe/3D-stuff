@@ -16,12 +16,12 @@ Blender) whenever the blend changes; verify with dashboard/scripts/verify-apartm
 ## Doorway openings (done 2026-06-22)
 
 - [x] All five doorways (LivingRoom, Bathroom, Exit, Bedroom, Kitchen) are cut as editable
-      boolean holes in the wall slabs: each wall has a DoorHole_<room> BOOLEAN modifier with a
-      DoorCut_<room> cutter object (DoorCutters collection, not exported). The Frame_<room>
+      boolean holes in the wall slabs: each wall has a DoorHole*<room> BOOLEAN modifier with a
+      DoorCut*<room> cutter object (DoorCutters collection, not exported). The Frame*<room>
       rings were deepened to span the wall thickness so they line the cut. Walls must be
       exported with export_apply=True so the booleans bake. Collision opens through the holes
-      via Room.pushWallColliders (carves the wall AABB around each Leaf_ opening).
-- [ ] Resize a doorway by moving/scaling its DoorCut_<room> cutter in Blender, then re-export
+      via Room.pushWallColliders (carves the wall AABB around each Leaf* opening).
+- [ ] Resize a doorway by moving/scaling its DoorCut\_<room> cutter in Blender, then re-export
       walls. (Blender)
 
 ## Walls / ceiling (Blender)
@@ -60,5 +60,5 @@ Blender) whenever the blend changes; verify with dashboard/scripts/verify-apartm
 ## Room
 
 - [x] Entrance door + corridor: handled by the assembled blend. The hallway (with all five
-      Leaf_* doors and the porte-manteau) sits in place next to the living room; once the
+      Leaf\_\* doors and the porte-manteau) sits in place next to the living room; once the
       doorway holes are cut (see above) you walk straight through.

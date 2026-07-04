@@ -47,19 +47,19 @@ export default class Floor {
     this.circleFirst.rotation.x =
       this.circleSecond.rotation.x =
       this.circleThird.rotation.x =
-      -Math.PI / 2;
+        -Math.PI / 2;
 
     this.circleFirst.receiveShadow =
       this.circleSecond.receiveShadow =
       this.circleThird.receiveShadow =
-      true;
+        true;
 
     this.scene.add(this.circleFirst);
     this.scene.add(this.circleSecond);
     this.scene.add(this.circleThird);
   }
 
-  resize() { }
+  resize() {}
 
-  update() { }
+  update() {}
 }

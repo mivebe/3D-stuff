@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  KEY_ACTIONS,
-  createInputState,
-  applyKey,
-  desiredMovement,
-} from '../src/player/input.js';
+import { KEY_ACTIONS, createInputState, applyKey, desiredMovement } from '../src/player/input.js';
 
 describe('input state', () => {
   it('starts with every action false', () => {

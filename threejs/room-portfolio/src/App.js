@@ -1,17 +1,17 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-import Sizes from './utils/Sizes.js';
-import Time from './utils/Time.js';
-import Resources from './utils/Resources.js';
-import assets from './utils/assets.js';
+import Sizes from "./utils/Sizes.js";
+import Time from "./utils/Time.js";
+import Resources from "./utils/Resources.js";
+import assets from "./utils/assets.js";
 
-import Camera from './Camera.js';
-import Renderer from './Renderer.js';
+import Camera from "./Camera.js";
+import Renderer from "./Renderer.js";
 
-import World from './features/World.js';
-import Player from './features/Player.js';
-import Panel from './features/Panel.js';
-import Interaction from './features/Interaction.js';
+import World from "./features/World.js";
+import Player from "./features/Player.js";
+import Panel from "./features/Panel.js";
+import Interaction from "./features/Interaction.js";
 
 export default class App {
   static instance;
@@ -29,10 +29,10 @@ export default class App {
     this.resources = new Resources(assets);
     this.world = new World();
 
-    this.world.on('worldready', () => this.onWorldReady());
+    this.world.on("worldready", () => this.onWorldReady());
 
-    this.sizes.on('resize', () => this.resize());
-    this.time.on('update', () => this.update());
+    this.sizes.on("resize", () => this.resize());
+    this.time.on("update", () => this.update());
   }
 
   onWorldReady() {
@@ -40,14 +40,15 @@ export default class App {
     this.panel = new Panel();
     this.interaction = new Interaction();
 
-    const loading = document.querySelector('.loading');
-    const start = document.querySelector('.start');
-    loading && loading.classList.add('hidden');
-    start && start.classList.remove('hidden');
-    start && start.addEventListener('click', () => {
-      start.classList.add('hidden');
-      this.player.lock();
-    });
+    const loading = document.querySelector(".loading");
+    const start = document.querySelector(".start");
+    loading && loading.classList.add("hidden");
+    start && start.classList.remove("hidden");
+    start &&
+      start.addEventListener("click", () => {
+        start.classList.add("hidden");
+        this.player.lock();
+      });
   }
 
   resize() {

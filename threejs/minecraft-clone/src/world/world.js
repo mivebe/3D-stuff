@@ -28,7 +28,9 @@ import {
 let _opaqueMaterial = null;
 function getOpaqueMaterial() {
   if (_opaqueMaterial) return _opaqueMaterial;
-  const texture = new THREE.TextureLoader().load(`${import.meta.env.BASE_URL}textures/blocks/asd.png`);
+  const texture = new THREE.TextureLoader().load(
+    `${import.meta.env.BASE_URL}textures/blocks/asd.png`
+  );
   texture.minFilter = THREE.NearestFilter;
   texture.magFilter = THREE.NearestFilter;
   const atlasSize = meta.size;
@@ -55,7 +57,9 @@ function getOpaqueMaterial() {
 let _waterMaterial = null;
 function getWaterMaterial() {
   if (_waterMaterial) return _waterMaterial;
-  const texture = new THREE.TextureLoader().load(`${import.meta.env.BASE_URL}textures/blocks/water.png`);
+  const texture = new THREE.TextureLoader().load(
+    `${import.meta.env.BASE_URL}textures/blocks/water.png`
+  );
   texture.minFilter = THREE.NearestFilter;
   texture.magFilter = THREE.NearestFilter;
   _waterMaterial = new THREE.MeshBasicMaterial({
@@ -487,12 +491,60 @@ export default class World extends THREE.Group {
   generateWaterMesh() {
     // Unit-cube faces: outward normal + its 4 corner offsets.
     const FACES = [
-      { n: [1, 0, 0], v: [[1, 0, 0], [1, 1, 0], [1, 1, 1], [1, 0, 1]] },
-      { n: [-1, 0, 0], v: [[0, 0, 1], [0, 1, 1], [0, 1, 0], [0, 0, 0]] },
-      { n: [0, 1, 0], v: [[0, 1, 1], [1, 1, 1], [1, 1, 0], [0, 1, 0]] },
-      { n: [0, -1, 0], v: [[0, 0, 0], [1, 0, 0], [1, 0, 1], [0, 0, 1]] },
-      { n: [0, 0, 1], v: [[1, 0, 1], [1, 1, 1], [0, 1, 1], [0, 0, 1]] },
-      { n: [0, 0, -1], v: [[0, 0, 0], [0, 1, 0], [1, 1, 0], [1, 0, 0]] },
+      {
+        n: [1, 0, 0],
+        v: [
+          [1, 0, 0],
+          [1, 1, 0],
+          [1, 1, 1],
+          [1, 0, 1],
+        ],
+      },
+      {
+        n: [-1, 0, 0],
+        v: [
+          [0, 0, 1],
+          [0, 1, 1],
+          [0, 1, 0],
+          [0, 0, 0],
+        ],
+      },
+      {
+        n: [0, 1, 0],
+        v: [
+          [0, 1, 1],
+          [1, 1, 1],
+          [1, 1, 0],
+          [0, 1, 0],
+        ],
+      },
+      {
+        n: [0, -1, 0],
+        v: [
+          [0, 0, 0],
+          [1, 0, 0],
+          [1, 0, 1],
+          [0, 0, 1],
+        ],
+      },
+      {
+        n: [0, 0, 1],
+        v: [
+          [1, 0, 1],
+          [1, 1, 1],
+          [0, 1, 1],
+          [0, 0, 1],
+        ],
+      },
+      {
+        n: [0, 0, -1],
+        v: [
+          [0, 0, 0],
+          [0, 1, 0],
+          [1, 1, 0],
+          [1, 0, 0],
+        ],
+      },
     ];
 
     const positions = [];

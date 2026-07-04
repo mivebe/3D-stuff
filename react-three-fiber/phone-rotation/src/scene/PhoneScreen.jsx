@@ -1,22 +1,22 @@
-import { Html } from '@react-three/drei'
-import { screen, finishes } from '../data/product.js'
-import './screen.css'
+import { Html } from "@react-three/drei";
+import { screen, finishes } from "../data/product.js";
+import "./screen.css";
 
-const SCREEN_SCALE = 0.34
+const SCREEN_SCALE = 0.34;
 // icons cycle through the three phone finishes so the home screen stays on-brand
 const HOME_APPS = Array.from({ length: 20 }, (_, i) => {
-  const finish = finishes[i % finishes.length]
-  return [finish.swatch, finish.color]
-})
+  const finish = finishes[i % finishes.length];
+  return [finish.swatch, finish.color];
+});
 
 const iconStyle = ([top, bottom]) => ({
   background: `linear-gradient(145deg, ${top}, ${bottom})`,
-})
+});
 
 // phase: 0 home screen, 1 app opening into skeleton, 2+ content
 export default function PhoneScreen({ phase }) {
-  const launched = phase >= 1
-  const state = phase < 2 ? 'skeleton' : 'content'
+  const launched = phase >= 1;
+  const state = phase < 2 ? "skeleton" : "content";
 
   return (
     <Html
@@ -25,7 +25,7 @@ export default function PhoneScreen({ phase }) {
       pointerEvents="none"
       zIndexRange={[10, 0]}
     >
-      <div className={`screen ${launched ? 'screen--launched' : ''}`}>
+      <div className={`screen ${launched ? "screen--launched" : ""}`}>
         {/* home screen behind the app, only visible before it opens */}
         <div className="home">
           <div className="home__status">
@@ -51,7 +51,7 @@ export default function PhoneScreen({ phase }) {
 
         {launched && (
           <div className="app">
-            {state === 'skeleton' && (
+            {state === "skeleton" && (
               <div className="screen__skeleton">
                 <div className="sk sk--status" />
                 <div className="sk sk--hero" />
@@ -74,7 +74,7 @@ export default function PhoneScreen({ phase }) {
               </div>
             )}
 
-            {state === 'content' && (
+            {state === "content" && (
               <div className="screen__content">
                 <div className="screen__status">
                   <span>{screen.time}</span>
@@ -101,5 +101,5 @@ export default function PhoneScreen({ phase }) {
         )}
       </div>
     </Html>
-  )
+  );
 }
