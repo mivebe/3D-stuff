@@ -60,6 +60,16 @@ export const projects = [
     tool: 'vite',
   },
   {
+    id: 'room-portfolio',
+    title: 'Apartment Walkthrough',
+    blurb: 'First-person walkable apartment: WASD + mouse-look, collision, and interactive rooms.',
+    category: 'three.js',
+    source: '../threejs/room-portfolio',
+    tool: 'vite',
+    // wait for the glbs to load and the room to render behind the "click to enter" overlay
+    thumbWait: 6000,
+  },
+  {
     id: 'phone-rotation',
     title: 'Luxury Phone Showcase',
     blurb: 'A 3D luxury-phone storefront: GSAP intro, on-glass UI load, live finishes and constrained orbit.',
