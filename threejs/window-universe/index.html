@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="One 3D field drawn across several browser windows, placed by where each window sits on your desktop."
+    />
+    <title>Window Universe</title>
+  </head>
+
+  <body>
+    <canvas id="stage"></canvas>
+
+    <div class="hud" id="hud">
+      <header class="bar bar--top">
+        <div class="mark">
+          <svg class="mark__glyph" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="1.5" y="4.5" width="13" height="11" rx="1" />
+            <rect x="9.5" y="8.5" width="13" height="11" rx="1" />
+          </svg>
+          <span class="mark__name">Window Universe</span>
+        </div>
+        <div class="roster" id="roster" aria-live="polite">
+          <span class="roster__count" id="roster-count">1</span>
+          <span class="roster__label">window</span>
+          <ul class="roster__chips" id="roster-chips"></ul>
+        </div>
+      </header>
+
+      <section class="solo" id="solo" hidden>
+        <h1 class="solo__line">The scene is bigger than this window.</h1>
+        <p class="solo__note" id="solo-note">
+          Open a second window and drag it across your desktop. Both windows
+          draw the same field, each showing the part of it they cover.
+        </p>
+        <button class="button button--primary" id="solo-spawn" type="button">
+          Open another window
+        </button>
+        <p class="solo__blocked" id="solo-blocked" hidden>
+          Your browser blocked that window. Allow pop-ups for this page, or copy
+          the address into a new window yourself.
+        </p>
+      </section>
+
+      <footer class="bar bar--bottom">
+        <p class="readout" id="readout">
+          <span class="readout__key">window</span>
+          <span class="readout__value" id="readout-id">-</span>
+          <span class="readout__key">size</span>
+          <span class="readout__value" id="readout-size">-</span>
+          <span class="readout__key">screen</span>
+          <span class="readout__value" id="readout-screen">-</span>
+        </p>
+        <button class="button" id="spawn" type="button" hidden>+ window</button>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

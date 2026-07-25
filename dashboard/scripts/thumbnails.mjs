@@ -70,10 +70,9 @@ for (const proj of selected) {
   const page = await browser.newPage();
   await page.setViewport({ width: 800, height: 500, deviceScaleFactor: 1 });
   try {
-    await page.goto(`http://localhost:${port}/projects/${proj.id}/index.html`, {
-      waitUntil: "networkidle0",
-      timeout: 45000,
-    });
+    // thumbQuery lets a project ask for a more representative state in the shot
+    const url = `http://localhost:${port}/projects/${proj.id}/index.html${proj.thumbQuery ?? ""}`;
+    await page.goto(url, { waitUntil: "networkidle0", timeout: 45000 });
     await new Promise((r) => setTimeout(r, proj.thumbWait ?? 3800));
     await page.screenshot({
       path: join(thumbsDir, `${proj.id}.jpg`),

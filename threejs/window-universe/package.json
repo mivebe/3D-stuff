@@ -1,0 +1,19 @@
+{
+  "name": "window-universe",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "three": "^0.184.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6",
+    "vite": "^7.3.6"
+  }
+}

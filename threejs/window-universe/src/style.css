@@ -1,0 +1,350 @@
+/* self-hosted latin subsets, no external calls */
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: swap;
+  src: url("./assets/fonts/archivo-latin-var.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/plex-mono-latin-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/plex-mono-latin-500.woff2") format("woff2");
+}
+
+:root {
+  color-scheme: dark;
+
+  --ink: #06070c;
+  --ink-lift: #0b0e16;
+  --text: #e9edf8;
+  --muted: #79839b;
+  --faint: #4a5268;
+  --line: rgba(158, 180, 232, 0.14);
+
+  /* every window adopts the colour of its own node, set from js */
+  --accent: #46d6ff;
+
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --gap: clamp(14px, 2.4vw, 26px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--mono);
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+#stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* a soft pool of the window colour, so the frame edges read as lit glass */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 90% at 50% 50%,
+    transparent 40%,
+    color-mix(in srgb, var(--accent) 7%, transparent) 100%
+  );
+  transition: background 600ms ease;
+}
+
+.hud {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: var(--gap);
+  gap: var(--gap);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 900ms ease 200ms;
+}
+
+.hud[data-ready="true"] {
+  opacity: 1;
+}
+
+.bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bar--bottom {
+  align-items: flex-end;
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.mark__glyph {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  transition: stroke 600ms ease;
+}
+
+.mark__glyph rect:last-child {
+  opacity: 0.55;
+}
+
+.mark__name {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  font-stretch: 118%;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.roster {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  text-align: right;
+}
+
+.roster__count {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  font-stretch: 118%;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  transition: color 600ms ease;
+}
+
+.roster__label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.roster__chips {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0 0 0 4px;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--chip);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--chip) 60%, transparent);
+  animation: chip-in 320ms cubic-bezier(0.2, 1.3, 0.4, 1);
+}
+
+.chip--self {
+  outline: 1px solid color-mix(in srgb, var(--chip) 55%, transparent);
+  outline-offset: 3px;
+}
+
+.chip--simulated {
+  opacity: 0.5;
+}
+
+@keyframes chip-in {
+  from {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+}
+
+.solo {
+  /* low, so the node keeps the middle of the window to itself */
+  place-self: end center;
+  max-width: 40ch;
+  padding: 32px 32px 0;
+  text-align: center;
+  pointer-events: auto;
+  /* the node sits dead centre too, so the copy carries its own shade */
+  background: radial-gradient(
+    closest-side,
+    rgba(6, 7, 12, 0.68),
+    rgba(6, 7, 12, 0.42) 58%,
+    transparent
+  );
+  text-shadow: 0 2px 18px rgba(6, 7, 12, 0.85);
+  animation: solo-in 700ms ease both;
+}
+
+.solo[hidden] {
+  display: none;
+}
+
+@keyframes solo-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.solo__line {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(24px, 3.4vw, 38px);
+  font-weight: 500;
+  font-stretch: 108%;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.solo__note {
+  margin: 14px auto 22px;
+  max-width: 42ch;
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.solo__blocked {
+  margin: 14px auto 0;
+  max-width: 40ch;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--accent);
+}
+
+.button {
+  pointer-events: auto;
+  appearance: none;
+  padding: 9px 15px;
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+  color: var(--accent);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    transform 200ms cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+.button:hover {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  transform: translateY(-1px);
+}
+
+.button:active {
+  transform: translateY(0);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.button--primary {
+  padding: 13px 22px;
+  font-size: 12px;
+}
+
+.button[hidden] {
+  display: none;
+}
+
+.readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  margin: 0;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.readout__key {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.readout__value {
+  color: var(--muted);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* embedded in the portfolio dashboard: the demo needs a window of its own */
+.hud[data-embedded="true"] .readout__key,
+.hud[data-embedded="true"] .roster__label {
+  color: var(--faint);
+}
+
+@media (max-width: 620px) {
+  .mark__name {
+    font-size: 11px;
+  }
+
+  .readout {
+    font-size: 10px;
+    gap: 4px 8px;
+  }
+
+  .solo__line {
+    font-size: clamp(22px, 7vw, 34px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud,
+  .solo,
+  .chip,
+  .button {
+    animation: none;
+    transition: none;
+  }
+}
